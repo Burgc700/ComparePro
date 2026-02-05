@@ -1,3 +1,12 @@
+--Drop Database if it exists
+-- Force disconnect all users and drop
+IF EXISTS (SELECT name FROM sys.databases WHERE name = 'ComparePro')
+BEGIN
+    ALTER DATABASE ComparePro SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE ComparePro;
+END
+GO
+
 --Create Database
 CREATE DATABASE ComparePro
 GO
@@ -105,3 +114,12 @@ VALUES
     -- MSI Ventus RTX 4060 Ti
     (12, 'Newegg', 419.99, 4.6, 'https://www.newegg.com/msi-geforce-rtx-4060-ti-8gb/p/N82E16814137752'),
     (12, 'MicroCenter', 399.99, 4.5, 'https://www.microcenter.com/product/666666/msi-ventus-geforce-rtx-4060-ti');
+
+--Testing to make sure everything is there
+SELECT * FROM Products WHERE Product_Category = 'CPU'
+
+SELECT * FROM Products WHERE Product_Category = 'CPU'
+
+SELECT * FROM Price WHERE Store = 'Newegg'
+
+SELECT * FROM Price WHERE Store = 'Microcenter'
