@@ -43,6 +43,8 @@ product_args = reqparse.RequestParser()
 product_args.add_argument('name', type=str, required=True)
 product_args.add_argument('brand', type=str, required=True)
 product_args.add_argument('category', type=str, required=True)
+product_args.add_argument('Model Number', type=str, required=True)
+product_args.add_argument('Features', type=str, required=True)
 
 productFields = {
     'id': fields.Integer,
