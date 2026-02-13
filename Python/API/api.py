@@ -5,10 +5,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Numeric
 from flask_restful import Api, Resource, reqparse, fields, marshal_with, abort
-#need to add and install library for using react
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+
+CORS(app)
 
 #region Connection
 params = urllib.parse.quote_plus(
@@ -67,7 +69,7 @@ class Products(Resource):
 class PricesModel(db.Model):
     __tablename__ = 'Price'
     id = db.Column('Price_id', db.Integer, primary_key = True)
-    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Product_id'), nullable=True)
+    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Product_id'), nullable=True)
     store = db.Column('Store', db.String(20), nullable = True)
     price = db.Column('Price', Numeric(6, 2), nullable = True)
     rating = db.Column('Rating', Numeric(2, 1), nullable = True)
