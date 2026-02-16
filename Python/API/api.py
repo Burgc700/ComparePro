@@ -63,6 +63,12 @@ class Products(Resource):
     def get(self):
         products = ProductsModel.query.all()
         return products
+    
+class SortProductsByCategory(Resource):
+        @marshal_with(productFields)
+        def get(self, category):
+            products = ProductsModel.query.filter_by(category=category).all()
+            return products
 #endregion    
 
 #region Prices
@@ -101,6 +107,7 @@ class Prices(Resource):
 
 api.add_resource(Products, '/api/products')
 api.add_resource(Prices, '/api/prices')
+api.add_resource(SortProductsByCategory, '/api/products/<string:category>')
 
 @app.route('/')
 def home():
