@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
 import "./Home.css"
 
-export function Home() {
+export function CPU() {
     const [Products, setProducts] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(null)
+        const [loading, setLoading] = useState(true)
+        const [error, setError] = useState(null)
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/products')
+        fetch('http://localhost:5000/api/products/cpu')
             .then(response => {
                 if(!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`)
@@ -34,7 +34,7 @@ export function Home() {
 
     return (
         <>
-            <h1 className="mainHeaders">All Products</h1>
+            <h1 className="mainHeaders">CPU'S</h1>
                 <div className="AllProducts">
                     {Products.map((product, index) => ( 
                         <div key={index} className="productCard">

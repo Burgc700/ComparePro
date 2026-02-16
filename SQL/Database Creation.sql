@@ -9,10 +9,10 @@ GO
 
 --Create Database
 CREATE DATABASE ComparePro
-GO
+GO;
 
 USE ComparePro
-GO
+GO;
 
 --Create tables
 CREATE TABLE Products(
@@ -59,7 +59,18 @@ VALUES
     ('GIGABYTE AORUS RTX 4070 Ti', 'GIGABYTE', 'GV-N407TAORUS M-12GD', 'GPU', 'https://m.media-amazon.com/images/I/81X5cuFKzlL._AC_SL1500_.jpg', '12GB GDDR6X, 2610 MHz Boost Clock, PCIe 4.0, WINDFORCE Cooling'),
     ('AMD Radeon RX 7900 XTX', 'AMD', '21322-00-40G', 'GPU', 'https://m.media-amazon.com/images/I/81bhqBPwZgL._AC_SL1500_.jpg', '24GB GDDR6, 2500 MHz Boost Clock, PCIe 4.0, RDNA 3'),
     ('ASUS TUF Gaming RTX 4070', 'ASUS', 'TUF-RTX4070-O12G-GAMING', 'GPU', 'https://m.media-amazon.com/images/I/81Y3FQFqZcL._AC_SL1500_.jpg', '12GB GDDR6X, 2610 MHz Boost Clock, PCIe 4.0, Axial-tech Fans'),
-    ('MSI Ventus RTX 4060 Ti', 'MSI', 'RTX 4060 Ti VENTUS 2X BLACK 8G OC', 'GPU', 'https://m.media-amazon.com/images/I/71hL9RXHKVL._AC_SL1500_.jpg', '8GB GDDR6, 2565 MHz Boost Clock, PCIe 4.0, Dual Fan Design');
+    ('MSI Ventus RTX 4060 Ti', 'MSI', 'RTX 4060 Ti VENTUS 2X BLACK 8G OC', 'GPU', 'https://m.media-amazon.com/images/I/71hL9RXHKVL._AC_SL1500_.jpg', '8GB GDDR6, 2565 MHz Boost Clock, PCIe 4.0, Dual Fan Design'),
+
+    --Ram mock data
+    ('G.Skill Trident Z5 RGB 32GB (2x16GB) DDR5-6000 CL30', 'G.Skill', 'F5-6000J3038F16GX2-TZ5RK', 'RAM', 'https://m.media-amazon.com/images/I/71V2lGZ5eDL._AC_SL1500_.jpg','32GB Kit (2x16GB), DDR5-6000, CL30, Intel XMP/AMD EXPO, RGB'),
+    ('Corsair Vengeance 32GB (2x16GB) DDR5-6000 CL36', 'Corsair', 'CMK32GX5M2E6000C36', 'RAM', 'https://m.media-amazon.com/images/I/71vD6xk0JwL._AC_SL1500_.jpg', '32GB Kit (2x16GB), DDR5-6000, CL36, XMP/EXPO Ready, Low-profile'),
+    ('Kingston Fury Beast 16GB (2x8GB) DDR4-3200 CL16', 'Kingston', 'KF432C16BBK2/16', 'RAM', 'https://m.media-amazon.com/images/I/61GQ9k4jHJL._AC_SL1500_.jpg', '16GB Kit (2x8GB), DDR4-3200, CL16, Plug N Play, Black'),
+
+    --SSD mock data
+    ('Samsung 990 PRO 2TB NVMe M.2 PCIe 4.0', 'Samsung', 'MZ-V9P2T0B/AM', 'SSD', 'https://m.media-amazon.com/images/I/71u2Xl7v7VL._AC_SL1500_.jpg', '2TB, NVMe, M.2 2280, PCIe 4.0 x4, Up to 7450 MB/s Read'),
+    ('WD_BLACK SN850X 1TB NVMe M.2 PCIe 4.0', 'Western Digital', 'WDS100T2X0E', 'SSD', 'https://m.media-amazon.com/images/I/61J9c4u3P6L._AC_SL1500_.jpg',   '1TB, NVMe, M.2 2280, PCIe 4.0 x4, Gaming SSD'),
+    ('Crucial MX500 1TB SATA 2.5" SSD', 'Crucial', 'CT1000MX500SSD1', 'SSD', 'https://m.media-amazon.com/images/I/61V0b3Qh3IL._AC_SL1500_.jpg', '1TB, SATA III, 2.5-inch, Up to 560 MB/s Read');
+
 
 INSERT INTO Price (Product_id, Store, Price, Rating, [URL])
 VALUES
@@ -113,12 +124,38 @@ VALUES
     
     -- MSI Ventus RTX 4060 Ti
     (12, 'Newegg', 419.99, 4.6, 'https://www.newegg.com/msi-geforce-rtx-4060-ti-8gb/p/N82E16814137752'),
-    (12, 'MicroCenter', 399.99, 4.5, 'https://www.microcenter.com/product/666666/msi-ventus-geforce-rtx-4060-ti');
+    (12, 'MicroCenter', 399.99, 4.5, 'https://www.microcenter.com/product/666666/msi-ventus-geforce-rtx-4060-ti'),
+
+--RAM price mock data
+
+    (13, 'Newegg', 119.99, 4.8, 'https://www.newegg.com/p/N82E16820374440'),
+    (13, 'MicroCenter', 109.99, 4.7, 'https://www.microcenter.com/product/000000/g-skill-trident-z5-rgb-32gb-ddr5-6000'),
+
+    (14, 'Newegg', 104.99, 4.7, 'https://www.newegg.com/p/N82E16820236919'),
+    (14, 'MicroCenter',  99.99, 4.6, 'https://www.microcenter.com/product/000000/corsair-vengeance-32gb-ddr5-6000'),
+
+    (15, 'Newegg',  39.99, 4.7, 'https://www.newegg.com/p/N82E16820242598'),
+    (15, 'MicroCenter', 34.99, 4.6, 'https://www.microcenter.com/product/000000/kingston-fury-beast-16gb-ddr4-3200'),
+
+--SSD price mock data
+
+    (16, 'Newegg', 169.99, 4.8, 'https://www.newegg.com/p/N82E16820147861'),
+    (16, 'MicroCenter', 159.99, 4.7, 'https://www.microcenter.com/product/000000/samsung-990-pro-2tb'),
+
+    (17, 'Newegg',  89.99, 4.7, 'https://www.newegg.com/p/N82E16820250261'),
+    (17, 'MicroCenter', 84.99, 4.6, 'https://www.microcenter.com/product/000000/wd-black-sn850x-1tb'),
+
+    (18, 'Newegg',  69.99, 4.7, 'https://www.newegg.com/p/N82E16820156174'),
+    (18, 'MicroCenter', 64.99, 4.6, 'https://www.microcenter.com/product/000000/crucial-mx500-1tb');
 
 --Testing to make sure everything is there
 SELECT * FROM Products WHERE Product_Category = 'CPU'
 
 SELECT * FROM Products WHERE Product_Category = 'CPU'
+
+SELECT * FROM Products WHERE Product_Category = 'RAM'
+
+SELECT * FROM Products WHERE Product_Category = 'SSD'
 
 SELECT * FROM Price WHERE Store = 'Newegg'
 
