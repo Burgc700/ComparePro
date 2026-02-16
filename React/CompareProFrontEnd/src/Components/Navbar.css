@@ -1,0 +1,20 @@
+/*.header{
+    background-color: purple;
+}*/
+
+.nav {
+    align-items: top;
+}
+
+.navBtn {
+    align-items: center;
+    margin: 5px
+}
+
+.searchBar {
+    margin: 5px;
+}
+
+.searchBtn {
+    margin: 5px;
+}
