@@ -7,6 +7,7 @@ import { GPU } from "./Pages/GPU"
 import { RAM } from "./Pages/RAM"
 import { SSD } from "./Pages/SSD"
 import { Layout } from "./Components/Layout"
+import { ProductPerSite } from "./Pages/ProductPerSite"
 import './App.css'
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/signinsignup" element={<SignInSignUp />} />
+        <Route path="/product/:id" element={<ProductPerSite />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/cpu" element={<CPU />} />

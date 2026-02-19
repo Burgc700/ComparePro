@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 import "./Home.css"
 
 export function GPU() {
@@ -7,7 +8,7 @@ export function GPU() {
         const [error, setError] = useState(null)
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/products/gpu')
+        fetch('http://localhost:5000/api/products/category/gpu')
             .then(response => {
                 if(!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`)
@@ -38,14 +39,16 @@ export function GPU() {
                 <div className="AllProducts">
                     {Products.map((product, index) => ( 
                         <div key={index} className="productCard">
-                            <img src={product.image} style={{maxWidth: '100%'}} />
-                            <p>{product.name}</p>
-                            <p>{product.brand}</p>
-                            <p>{product.model_num}</p>
-                            <p>{product.category}</p>
-                            <ul className="featuresList">
-                                <li>{product.features}</li>
-                            </ul>
+                            <Link to={`/product/${product.id}`} key={index} className="productLink">
+                                <img src={product.image} style={{maxWidth: '100%'}} />
+                                <p>{product.name}</p>
+                                <p>{product.brand}</p>
+                                <p>{product.model_num}</p>
+                                <p>{product.category}</p>
+                                <ul className="featuresList">
+                                    <li>{product.features}</li>
+                                </ul>
+                            </Link>
                         </div>
                     ))}
                 </div>

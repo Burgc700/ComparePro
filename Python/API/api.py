@@ -69,6 +69,14 @@ class SortProductsByCategory(Resource):
         def get(self, category):
             products = ProductsModel.query.filter_by(category=category).all()
             return products
+        
+class ProductByID(Resource):
+    @marshal_with(productFields)
+    def get(self,id):
+        products = ProductsModel.query.get(id)
+        if not products:
+            abort(404, message="Product not found")
+        return products
 #endregion    
 
 #region Prices
@@ -100,14 +108,15 @@ priceFields = {
 
 class Prices(Resource):
     @marshal_with(priceFields)
-    def get(self):
-        prices = PricesModel.query.all()
+    def get(self, id):
+        prices = PricesModel.query.filter_by(id=id).all()
         return prices
 #endregion
 
 api.add_resource(Products, '/api/products')
-api.add_resource(Prices, '/api/prices')
-api.add_resource(SortProductsByCategory, '/api/products/<string:category>')
+api.add_resource(Prices, '/api/prices/<int:id>')
+api.add_resource(SortProductsByCategory, '/api/products/category/<string:category>')
+api.add_resource(ProductByID, '/api/products/ID/<int:id>')
 
 @app.route('/')
 def home():

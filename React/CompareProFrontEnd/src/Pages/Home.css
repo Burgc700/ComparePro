@@ -18,3 +18,8 @@
     padding: 15px;
     margin: 5px;
 }
+
+.productLink {
+    text-decoration: none;
+    color: inherit;
+}

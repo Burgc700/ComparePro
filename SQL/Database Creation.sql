@@ -160,3 +160,7 @@ SELECT * FROM Products WHERE Product_Category = 'SSD'
 SELECT * FROM Price WHERE Store = 'Newegg'
 
 SELECT * FROM Price WHERE Store = 'Microcenter'
+
+SELECT Product_id, COUNT(*) as PriceCount 
+FROM Price 
+GROUP BY Product_id
