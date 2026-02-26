@@ -109,7 +109,7 @@ priceFields = {
 class Prices(Resource):
     @marshal_with(priceFields)
     def get(self, id):
-        prices = PricesModel.query.filter_by(id=id).all()
+        prices = PricesModel.query.filter_by(product_id=id).all()
         return prices
 #endregion
 

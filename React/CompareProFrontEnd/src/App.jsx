@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import { Landing } from "./Pages/Landing"
 import { Home } from "./Pages/Home"
-import { SignInSignUp } from "./Pages/SignInSignUp"
+import SignInSignUp from "./Pages/SignInSignUp"
 import { CPU } from "./Pages/CPU"
 import { GPU } from "./Pages/GPU"
 import { RAM } from "./Pages/RAM"

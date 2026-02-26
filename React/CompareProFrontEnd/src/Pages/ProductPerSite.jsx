@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
-import "./Home.css"
+import "./ProductPerSite.css"
 
 export function ProductPerSite() {
     const { id } = useParams()

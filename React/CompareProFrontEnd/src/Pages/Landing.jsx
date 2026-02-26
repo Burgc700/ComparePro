@@ -12,7 +12,7 @@ export function Landing() {
     }, [])
 
     if(Redirect) {
-        return <Navigate to="/home" replace />
+        return <Navigate to="/signinsignup" replace />
     }
 
     return (

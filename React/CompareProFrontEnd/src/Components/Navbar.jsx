@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { UserButton } from '@clerk/clerk-react'
 import "./Navbar.css"
 
 export function Navbar() {
@@ -25,6 +26,8 @@ export function Navbar() {
                     <button className="navBtn">
                         <Link to="/RAM">Random Access Memory(RAM)</Link>
                     </button>
+
+                    <UserButton />
                 </nav>
                 <label className="searchBar" htmlFor="component">Search</label>
                 <input type="text" id="component" />
