@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import "./ProductPerSite.css"
+import "../Components/Navbar.css"
 
 export function ProductPerSite() {
     const { id } = useParams()
@@ -8,6 +9,8 @@ export function ProductPerSite() {
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState(null)
     const [ prices, setPrices ] = useState([])
+    const [ inputText, setInputText ] = useState('')
+    const [ commentList, setCommentList ] = useState([])
 
     useEffect(() => {
         fetch(`http://localhost:5000/api/products/ID/${id}`)
@@ -37,6 +40,17 @@ export function ProductPerSite() {
         return <div>Product not found</div>
     }
 
+    const HandleInputChange = (event) => {
+        setInputText(event.target.value)
+    }
+
+    const HandleButtonClick = () => {
+        if(inputText.trim() !== '') {
+            setCommentList([...commentList, inputText])
+            setInputText('')
+        }
+    }
+
     return (
         <>
             <h1 className="mainHeaders">{product.name}</h1>
@@ -60,6 +74,21 @@ export function ProductPerSite() {
                     </div>
                 ))}
             </div>
+            <h2>Comments</h2>
+            <div className="commentBox">
+                <label className="searchBar" htmlFor="comments">Comments </label>
+                <input className="comments" type="text" value={inputText} onChange={HandleInputChange}/>
+                <button className="searchBtn" onClick={HandleButtonClick}>Add Comment</button>
+                <div className="commentsContainer">
+                    <ul className="list">
+                        {commentList.map((item, index) => (
+                            <li key={index}>{item}</li>
+                        ))}
+                    </ul>
+                </div>
+            </div>
+
+                
         </>
     )
 }

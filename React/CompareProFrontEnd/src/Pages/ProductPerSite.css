@@ -25,3 +25,15 @@
     text-decoration: none;
     color: inherit;
 }
+
+.commentsContainer {
+    border: 2px solid white;
+    border-radius: 8px;
+    margin-top: 5px;
+}
+
+.list {
+    list-style: none;
+    text-align: left;
+    
+}
