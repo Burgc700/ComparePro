@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Numeric
 from flask_restful import Api, Resource, reqparse, fields, marshal_with, abort
 from flask_cors import CORS
+from flask_restful import marshal
 
 
 app = Flask(__name__)
@@ -30,6 +31,7 @@ api = Api(app)
 #region Products
 class ProductsModel(db.Model):
     __tablename__ = 'Products'
+    __table_args__ = {'schema': 'Products'}
     id = db.Column('Product_id', db.Integer, primary_key = True)
     name = db.Column('Product_name', db.String(400), nullable = True)
     brand = db.Column('Brand', db.String(50), nullable = True)
@@ -82,8 +84,9 @@ class ProductByID(Resource):
 #region Prices
 class PricesModel(db.Model):
     __tablename__ = 'Price'
+    __table_args__ = {'schema': 'Products'}
     id = db.Column('Price_id', db.Integer, primary_key = True)
-    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Product_id'), nullable=True)
+    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=True)
     store = db.Column('Store', db.String(20), nullable = True)
     price = db.Column('Price', Numeric(6, 2), nullable = True)
     rating = db.Column('Rating', Numeric(2, 1), nullable = True)
@@ -103,7 +106,7 @@ priceFields = {
     'store': fields.String,
     'price': fields.Float,
     'rating': fields.Float,
-    'url': fields.String,
+    'url': fields.String
 }
 
 class Prices(Resource):
@@ -112,11 +115,54 @@ class Prices(Resource):
         prices = PricesModel.query.filter_by(product_id=id).all()
         return prices
 #endregion
+ 
+
+#region Comments
+class CommentsModel(db.Model):
+    __tablename__ = 'User_Comments'
+    __table_args__ = {'schema': 'Users'}
+    id = db.Column('Comment_id', db.Integer, primary_key = True)
+    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
+    user_id = db.Column('User_id', db.String(100), nullable = False)
+    text = db.Column('Text', db.String(1073741823), nullable = False)
+    created_at = db.Column('Created_at', db.DateTime, default=db.func.now())
+
+    def __repr__(self):
+        return (f"Comment id: {self.id} Product id: {self.product_id} User id: {self.user_id} Comment: {self.text}")
+
+comment_args = reqparse.RequestParser()
+comment_args.add_argument('User_id', type=str, required=True, location="json")
+comment_args.add_argument('Text', type=str, required=True, location="json")
+
+commentFields = {
+    'id': fields.Integer,
+    'product_id': fields.Integer,
+    'user_id': fields.String,
+    'text': fields.String,
+    'created_at': fields.DateTime
+}
+
+class CommentsForProduct(Resource):
+    def get(self, product_id):
+        comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.created_at.desc()).all()
+        return marshal(comments, commentFields), 200
+    
+class AddComment(Resource):
+    def post(self, product_id):
+        args = comment_args.parse_args()
+        comment = CommentsModel(product_id=product_id, User_id=args['User_id'], Text=args['Text'])
+        db.session.add(comment)
+        db.session.commit()
+        comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.created_at.desc()).all()
+        return marshal(comments, commentFields), 201
+#endregion
 
 api.add_resource(Products, '/api/products')
 api.add_resource(Prices, '/api/prices/<int:id>')
 api.add_resource(SortProductsByCategory, '/api/products/category/<string:category>')
 api.add_resource(ProductByID, '/api/products/ID/<int:id>')
+api.add_resource(CommentsForProduct, '/api/comments/<int:product_id>')
+api.add_resource(AddComment, '/api/comments/add/<int:product_id>')
 
 @app.route('/')
 def home():

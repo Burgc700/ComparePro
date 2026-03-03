@@ -14,8 +14,15 @@ GO;
 USE ComparePro
 GO;
 
+--Creates schemas
+IF SCHEMA_ID(N'Products') IS NULL   
+    EXEC(N'CREATE SCHEMA Products;');
+
+IF SCHEMA_ID(N'Users') IS NULL  
+    EXEC(N'CREATE SCHEMA Users;');
+
 --Create tables
-CREATE TABLE Products(
+CREATE TABLE Products.Products(
 	Product_id INT IDENTITY(1,1) PRIMARY KEY,
 	Product_name NVARCHAR(400) NOT NULL,
 	Brand NVARCHAR(50) NOT NULL,
@@ -27,7 +34,7 @@ CREATE TABLE Products(
 	Updated_On DATETIME DEFAULT(SYSDATETIMEOFFSET()),
 );
 
-CREATE TABLE Price(
+CREATE TABLE Products.Price(
 	Price_id INT IDENTITY(1,1) PRIMARY KEY,
 	Product_id INT NOT NULL,
 	Store NVARCHAR(20) NOT NULL,
@@ -37,13 +44,24 @@ CREATE TABLE Price(
 	Scrapped_At DATETIME DEFAULT(SYSDATETIMEOFFSET()),
 
 	CONSTRAINT FK1_Product_id FOREIGN KEY(Product_id)
-		REFERENCES Products(Product_id)
+		REFERENCES Products.Products(Product_id)
+);
+
+CREATE TABLE Users.User_Comments(
+    Comment_id INT IDENTITY(1,1) PRIMARY KEY,
+    Product_id INT NOT NULL,
+    User_id NVARCHAR(100) NOT NULL,
+    [Text] NVARCHAR(MAX) NOT NULL,
+    Created_at DATETIME DEFAULT(SYSDATETIME()),
+
+    CONSTRAINT FK2_Product_id FOREIGN KEY(Product_id)
+        REFERENCES Products.Products(Product_id)
 );
 
 --indexs (possibly later)
 
 --Insert data
-INSERT INTO Products (Product_name, Brand, Model_Number, Product_Category, Image_URL, Features)
+INSERT INTO Products.Products (Product_name, Brand, Model_Number, Product_Category, Image_URL, Features)
 VALUES
 	-- CPU mock data
 	('AMD Ryzen 9 7950X', 'AMD', '100-100000514WOF', 'CPU', 'https://m.media-amazon.com/images/I/61R3PqyVuCL._AC_SL1500_.jpg', '16 Cores, 32 Threads, 5.7 GHz Max Boost, AM5 Socket'),
@@ -72,7 +90,7 @@ VALUES
     ('Crucial MX500 1TB SATA 2.5" SSD', 'Crucial', 'CT1000MX500SSD1', 'SSD', 'https://m.media-amazon.com/images/I/61V0b3Qh3IL._AC_SL1500_.jpg', '1TB, SATA III, 2.5-inch, Up to 560 MB/s Read');
 
 
-INSERT INTO Price (Product_id, Store, Price, Rating, [URL])
+INSERT INTO Products.Price (Product_id, Store, Price, Rating, [URL])
 VALUES
 	--Price CPU mock data
 
@@ -148,19 +166,26 @@ VALUES
     (18, 'Newegg',  69.99, 4.7, 'https://www.newegg.com/p/N82E16820156174'),
     (18, 'MicroCenter', 64.99, 4.6, 'https://www.microcenter.com/product/000000/crucial-mx500-1tb');
 
+INSERT INTO Users.User_Comments(Product_id, User_id, [Text])
+VALUES
+    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is a test.'),
+    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is another test.');
+
 --Testing to make sure everything is there
-SELECT * FROM Products WHERE Product_Category = 'CPU'
+SELECT * FROM Products.Products WHERE Product_Category = 'CPU'
 
-SELECT * FROM Products WHERE Product_Category = 'CPU'
+SELECT * FROM Products.Products WHERE Product_Category = 'CPU'
 
-SELECT * FROM Products WHERE Product_Category = 'RAM'
+SELECT * FROM Products.Products WHERE Product_Category = 'RAM'
 
-SELECT * FROM Products WHERE Product_Category = 'SSD'
+SELECT * FROM Products.Products WHERE Product_Category = 'SSD'
 
-SELECT * FROM Price WHERE Store = 'Newegg'
+SELECT * FROM Products.Price WHERE Store = 'Newegg'
 
-SELECT * FROM Price WHERE Store = 'Microcenter'
+SELECT * FROM Products.Price WHERE Store = 'Microcenter'
 
 SELECT Product_id, COUNT(*) as PriceCount 
-FROM Price 
+FROM Products.Price 
 GROUP BY Product_id
+
+SELECT * FROM Users.User_comments

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
+import { useUser } from "@clerk/clerk-react"
 import "./ProductPerSite.css"
 import "../Components/Navbar.css"
 
 export function ProductPerSite() {
     const { id } = useParams()
+    const { user, isSignedIn } = useUser()
     const [ product, setProduct ] = useState(null)
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState(null)
@@ -28,6 +30,11 @@ export function ProductPerSite() {
             .then(response => response.json())
             .then(data => setPrices(data))
             .catch(error => console.error('Price fetch error: ', error))
+
+        fetch(`http://localhost:5000/api/comments/${id}`)
+            .then(response => response.json())
+            .then(data => setCommentList(data))
+            .catch(error => console.error('Can not fetch comments: ', error))
     }, [id])
 
     if (loading) {
@@ -45,9 +52,30 @@ export function ProductPerSite() {
     }
 
     const HandleButtonClick = () => {
+        if(!isSignedIn){
+            alert('Sign in to comment')
+            return
+        }
         if(inputText.trim() !== '') {
-            setCommentList([...commentList, inputText])
-            setInputText('')
+            fetch(`http://localhost:5000/api/comments/add/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    text: inputText
+                })
+            })
+            .then(response => response.json())
+            .then(newComment => {
+                setCommentList([newComment, ...commentList])
+                setInputText('')
+            })
+            .catch(error => {
+                console.error('Could not add comment: ', error)
+                alert('Failed to add comment')
+            })
         }
     }
 
@@ -81,8 +109,10 @@ export function ProductPerSite() {
                 <button className="searchBtn" onClick={HandleButtonClick}>Add Comment</button>
                 <div className="commentsContainer">
                     <ul className="list">
-                        {commentList.map((item, index) => (
-                            <li key={index}>{item}</li>
+                        {commentList.map((comment) => (
+                            <li key={comment.id}>
+                                <p>{comment.text}</p>
+                            </li>
                         ))}
                     </ul>
                 </div>
