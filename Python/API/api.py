@@ -43,12 +43,12 @@ class ProductsModel(db.Model):
     def __repr__(self):
         return f"Product name: {self.name}, Brand: {self.brand}, Model_num: {self.model_num} Category: {self.category}, Image URL: {self.image}, features: {self.features})"
 
-product_args = reqparse.RequestParser()
-product_args.add_argument('name', type=str, required=True)
-product_args.add_argument('brand', type=str, required=True)
-product_args.add_argument('category', type=str, required=True)
-product_args.add_argument('Model Number', type=str, required=True)
-product_args.add_argument('Features', type=str, required=True)
+# product_args = reqparse.RequestParser()
+# product_args.add_argument('name', type=str, required=True, location="args")
+# product_args.add_argument('brand', type=str, required=True, location="args")
+# product_args.add_argument('category', type=str, required=True, location="args")
+# product_args.add_argument('Model Number', type=str, required=True, location="args")
+# product_args.add_argument('Features', type=str, required=True, location="args")
 
 productFields = {
     'id': fields.Integer,
@@ -79,6 +79,24 @@ class ProductByID(Resource):
         if not products:
             abort(404, message="Product not found")
         return products
+#endregion  
+
+#region Search    
+search_args = reqparse.RequestParser()
+search_args.add_argument('q', type=str, required=True, location="args")
+    
+class SearchProducts(Resource):
+    def get(self):
+        args = search_args.parse_args()
+        searchParam = args['q']
+        if searchParam:
+            results = ProductsModel.query.filter(
+                (db.func.lower(ProductsModel.name).like(f"%{searchParam.lower()}%")) |
+                (db.func.lower(ProductsModel.brand).like(f"%{searchParam.lower()}%")) |
+                (db.func.lower(ProductsModel.features).like(f"%{searchParam.lower()}%"))
+            ).all()
+        return marshal(results, productFields), 200
+
 #endregion    
 
 #region Prices
@@ -95,10 +113,10 @@ class PricesModel(db.Model):
     def __repr__(self):
         return f"Product id: {self.product_id}, store: {self.store}, price: {self.price} Rating: {self.rating}, URL: {self.url})"
 
-price_args = reqparse.RequestParser()
-price_args.add_argument('product_id', type=int, required=True)
-price_args.add_argument('store', type=str, required=True)
-price_args.add_argument('price', type=float, required=True)
+# price_args = reqparse.RequestParser()
+# price_args.add_argument('product_id', type=int, required=True)
+# price_args.add_argument('store', type=str, required=True)
+# price_args.add_argument('price', type=float, required=True)
 
 priceFields = {
     'id': fields.Integer,
@@ -116,7 +134,6 @@ class Prices(Resource):
         return prices
 #endregion
  
-
 #region Comments
 class CommentsModel(db.Model):
     __tablename__ = 'User_Comments'
@@ -131,8 +148,8 @@ class CommentsModel(db.Model):
         return (f"Comment id: {self.id} Product id: {self.product_id} User id: {self.user_id} Comment: {self.text}")
 
 comment_args = reqparse.RequestParser()
-comment_args.add_argument('User_id', type=str, required=True, location="json")
-comment_args.add_argument('Text', type=str, required=True, location="json")
+comment_args.add_argument('user_id', type=str, required=True, location="json")
+comment_args.add_argument('text', type=str, required=True, location="json")
 
 commentFields = {
     'id': fields.Integer,
@@ -148,13 +165,15 @@ class CommentsForProduct(Resource):
         return marshal(comments, commentFields), 200
     
 class AddComment(Resource):
+    @marshal_with(commentFields)
     def post(self, product_id):
         args = comment_args.parse_args()
-        comment = CommentsModel(product_id=product_id, User_id=args['User_id'], Text=args['Text'])
+        comment = CommentsModel(product_id=product_id, user_id=args['user_id'], text=args['text'])
         db.session.add(comment)
         db.session.commit()
-        comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.created_at.desc()).all()
-        return marshal(comments, commentFields), 201
+        db.session.refresh(comment)
+        #comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.created_at.desc()).all()
+        return comment, 201
 #endregion
 
 api.add_resource(Products, '/api/products')
@@ -163,6 +182,7 @@ api.add_resource(SortProductsByCategory, '/api/products/category/<string:categor
 api.add_resource(ProductByID, '/api/products/ID/<int:id>')
 api.add_resource(CommentsForProduct, '/api/comments/<int:product_id>')
 api.add_resource(AddComment, '/api/comments/add/<int:product_id>')
+api.add_resource(SearchProducts, '/api/products/search')
 
 @app.route('/')
 def home():

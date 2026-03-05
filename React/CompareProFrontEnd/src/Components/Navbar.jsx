@@ -1,8 +1,19 @@
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { UserButton } from '@clerk/clerk-react'
 import "./Navbar.css"
 
 export function Navbar() {
+    const [searchText, setSearchText] = useState('')
+    const nav = useNavigate()
+
+    const HandleButtonClick = () => {
+        if(searchText.trim() !== '') {
+            nav(`/search?q=${searchText}`)
+            setSearchText('')
+        }
+    }
+
     return (
         <>
             <div className="header">
@@ -29,9 +40,9 @@ export function Navbar() {
 
                     <UserButton />
                 </nav>
-                <label className="searchBar" htmlFor="component">Search</label>
-                <input type="text" id="component" />
-                <button className="searchBtn">Search</button>
+                <label className="searchBar" htmlFor="component" >Search</label>
+                <input type="text" id="component" value={searchText} onChange={(e) => setSearchText(e.target.value)}/>
+                <button className="searchBtn" onClick={HandleButtonClick}>Search</button>
             </div>
         </>
     )

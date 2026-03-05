@@ -8,6 +8,7 @@ import { RAM } from "./Pages/RAM"
 import { SSD } from "./Pages/SSD"
 import { Layout } from "./Components/Layout"
 import { ProductPerSite } from "./Pages/ProductPerSite"
+import { SearchResults } from "./Pages/SearchResults"
 import './App.css'
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/signinsignup" element={<SignInSignUp />} />
         <Route path="/product/:id" element={<ProductPerSite />} />
+        <Route path="/search" element={<SearchResults/>}/>
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/cpu" element={<CPU />} />

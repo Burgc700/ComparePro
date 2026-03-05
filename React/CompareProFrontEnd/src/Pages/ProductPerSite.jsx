@@ -15,6 +15,8 @@ export function ProductPerSite() {
     const [ commentList, setCommentList ] = useState([])
 
     useEffect(() => {
+        setCommentList([])
+        setLoading(true)
         fetch(`http://localhost:5000/api/products/ID/${id}`)
             .then(response => response.json())
             .then(data => {
@@ -69,7 +71,7 @@ export function ProductPerSite() {
             })
             .then(response => response.json())
             .then(newComment => {
-                setCommentList([newComment, ...commentList])
+                setCommentList(prev => [newComment, ...prev])
                 setInputText('')
             })
             .catch(error => {
