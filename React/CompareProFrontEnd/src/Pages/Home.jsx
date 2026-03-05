@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import { useUser } from "@clerk/clerk-react"
 import "./Home.css"
 
 export function Home() {
     const [Products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const[recommendations, setRecommendations] = useState([])
+    const {user, isSignedIn} = useUser()
 
     useEffect(() => {
         fetch('http://localhost:5000/api/products')
@@ -16,7 +19,8 @@ export function Home() {
                 return response.json()
             })
             .then(data => {
-                setProducts(data)
+                const shuffledProducts = data.sort(() => Math.random() - 0.5)
+                setProducts(shuffledProducts)
                 setLoading(false)
             })
             .catch( error => {
@@ -24,6 +28,15 @@ export function Home() {
                 setLoading(false)
             })
     }, [])
+
+    useEffect(() => {
+        if(isSignedIn) {
+            fetch(`http://localhost:5000/api/recommendations/${user.id}`)
+                .then(response => response.json())
+                .then(data => setRecommendations(data))
+                .catch(error => console.error('Recommendations error:', error))
+        }
+    }, [isSignedIn, user])
 
     if(loading) {
         return <div>Loading all products...</div>
@@ -35,6 +48,18 @@ export function Home() {
 
     return (
         <>
+            <h2 className="mainHeaders">Recommended for you</h2>
+            <div className="AllProducts">
+                {recommendations.map((product) => (
+                    <Link to={`/product/${product.id}`} key={product.id} className="productLink">
+                        <div className="productCard">
+                            <img src={product.image} alt={product.name} style={{maxWidth: '100%'}}/>
+                            <p>{product.name}</p>
+                            <p>{product.brand}</p>
+                        </div>
+                    </Link>
+                ))}
+            </div>
             <h1 className="mainHeaders">All Products</h1>
                 <div className="AllProducts">
                     {Products.map((product, index) => ( 

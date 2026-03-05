@@ -58,6 +58,16 @@ CREATE TABLE Users.User_Comments(
         REFERENCES Products.Products(Product_id)
 );
 
+CREATE TABLE Users.Recommendations(
+    View_id INT IDENTITY(1,1) PRIMARY KEY,
+    Product_id INT NOT NULL,
+    User_id NVARCHAR(100) NOT NULL,
+    Viewed_at DATETIME DEFAULT(GETDATE()),
+
+    CONSTRAINT FK3_Product_id FOREIGN KEY(Product_id)
+        REFERENCES Products.Products(Product_id)
+);
+
 --indexs (possibly later)
 
 --Insert data
@@ -171,6 +181,13 @@ VALUES
     (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is a test.'),
     (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is another test.');
 
+INSERT INTO Users.Recommendations(Product_id, User_id)
+VALUES
+    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW'),
+    (2, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW'),
+    (4, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW'),
+    (12, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW')
+
 --Testing to make sure everything is there
 SELECT * FROM Products.Products WHERE Product_Category = 'CPU'
 
@@ -189,3 +206,5 @@ FROM Products.Price
 GROUP BY Product_id
 
 SELECT * FROM Users.User_comments
+
+SELECT * FROM Users.Recommendations

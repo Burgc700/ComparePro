@@ -39,6 +39,16 @@ export function ProductPerSite() {
             .catch(error => console.error('Can not fetch comments: ', error))
     }, [id])
 
+    useEffect(() => {
+        if(product && isSignedIn) {
+            fetch(`http://localhost:5000/api/track-view/${id}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({user_id: user.id})
+            })
+        }
+    },[product, id, isSignedIn, user])
+
     if (loading) {
         return <div>Loading products...</div>
     }

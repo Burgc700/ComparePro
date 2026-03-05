@@ -99,6 +99,53 @@ class SearchProducts(Resource):
 
 #endregion    
 
+#region Recommendations
+class RecommendationModel(db.Model):
+    __tablename__ = 'Recommendations'
+    __table_args__ = {'schema': 'Users'}
+    id = db.Column('View_id', db.Integer, primary_key = True)
+    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
+    user_id = db.Column('User_id', db.String(100), nullable = False)
+    viewed_at = db.Column('Viewed_at', db.DateTime, default=db.func.now())
+
+    def __repr__(self):
+        return(f"View_id: {self.id} Product_id: {self.product_id} User_id: {self.user_id}")
+    
+    #reqparse stuff if need
+
+viewFields = {
+    'id': fields.Integer,
+    'product_id': fields.Integer,
+    'user_id': fields.String
+}
+
+class Recommendations(Resource):
+    @marshal_with(productFields)
+    def get(self, user_id):
+        viewHistory = RecommendationModel.query.filter_by(user_id=user_id).all()
+        viewedProducts = [v.product_id for v in viewHistory]
+        displayProducts = ProductsModel.query.filter(ProductsModel.id.in_(viewedProducts)).all()
+        categories = list(set([p.category for p in displayProducts]))
+        brands = list(set([p.brand for p in displayProducts]))
+        recommended = ProductsModel.query.filter(
+            ProductsModel.category.in_(categories),
+            ProductsModel.brand.in_(brands),
+            ~ProductsModel.id.in_(viewedProducts)
+        ).limit(4).all()
+        return recommended
+    
+class TrackViewedProducts(Resource):
+    def post(self, product_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=str, required=True, location='json')
+        args = parser.parse_args()
+        viewedProduct = RecommendationModel(user_id=args['user_id'], product_id=product_id)
+        db.session.add(viewedProduct)
+        db.session.commit()
+        return {'message': 'View tracked'}, 201
+
+#endregion
+
 #region Prices
 class PricesModel(db.Model):
     __tablename__ = 'Price'
@@ -183,6 +230,8 @@ api.add_resource(ProductByID, '/api/products/ID/<int:id>')
 api.add_resource(CommentsForProduct, '/api/comments/<int:product_id>')
 api.add_resource(AddComment, '/api/comments/add/<int:product_id>')
 api.add_resource(SearchProducts, '/api/products/search')
+api.add_resource(Recommendations, '/api/recommendations/<string:user_id>')
+api.add_resource(TrackViewedProducts, '/api/track-view/<int:product_id>')
 
 @app.route('/')
 def home():
