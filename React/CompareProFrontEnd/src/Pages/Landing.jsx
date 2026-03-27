@@ -17,7 +17,8 @@ export function Landing() {
 
     return (
         <>
-            <h1>Landing</h1>
+            <h1>ComparePro</h1>
+            <h4>Redirecting you an awesome page</h4>
         </>
     )
     

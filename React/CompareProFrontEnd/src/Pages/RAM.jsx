@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import Likes from '../Components/Likes'
 import "./Home.css"
 
 export function RAM() {
@@ -49,6 +50,7 @@ export function RAM() {
                                     <li>{product.features}</li>
                                 </ul>
                             </Link>
+                            <Likes product={product} />
                         </div>
                     ))}
                 </div>

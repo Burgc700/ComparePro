@@ -1,19 +1,36 @@
-import './Home.css'
+import './SignInSignUp.css'
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
 
 function SignInSignUp() {
   return (
-    <header>
-      {/* Show the sign-in and sign-up buttons when the user is signed out */}
-      <SignedOut>
-        <SignInButton forceRedirectUrl="/home" />
-        <SignUpButton forceRedirectUrl="/home" />
-      </SignedOut>
-      {/* Show the user button when the user is signed in */}
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </header>
+    <>
+      <header className='Header'>
+        <div className='topComps'>
+          <h1 className='name'>ComparePro</h1>
+          <h3 className='purpose'>To Compare and contrast all your computer hardware needs</h3>
+        </div>
+      </header>
+
+      <div className='Pictures'>
+        <h5>This is where pictures will go for website that scroll through</h5>
+        <h5>Captions of some sort per picture.</h5>
+      </div>
+
+      <footer className='Footer'>
+        <div className='bottomComps'>
+          <h3 className='options'>Sign In or Sign Up to get started</h3>
+          <SignedOut>
+            <div className='Buttons'>
+              <SignInButton forceRedirectUrl="/home" />
+              <SignUpButton forceRedirectUrl="/home" />
+            </div>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
+      </footer>
+    </>
   )
 }
 

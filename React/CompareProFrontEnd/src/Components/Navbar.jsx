@@ -38,6 +38,10 @@ export function Navbar() {
                         <Link to="/RAM">Random Access Memory(RAM)</Link>
                     </button>
 
+                    <button className="navBtn">
+                        <Link to="/LikedItems">Liked Items</Link>
+                    </button>
+
                     <UserButton />
                 </nav>
                 <label className="searchBar" htmlFor="component" >Search</label>

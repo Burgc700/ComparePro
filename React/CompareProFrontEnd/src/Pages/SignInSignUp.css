@@ -1,0 +1,19 @@
+.Header {
+    padding-bottom: 600px;
+}
+
+.topComps {
+    border: 2px solid white;
+    padding: 30px;
+}
+
+.bottomComps {
+    border: 2px solid white;
+    padding: 30px;
+}
+
+.Pictures {
+    text-align: center;
+    margin-bottom: 30px;
+    
+}

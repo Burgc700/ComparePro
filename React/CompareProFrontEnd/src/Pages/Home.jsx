@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
+import Likes from '../Components/Likes'
 import "./Home.css"
 
 export function Home() {
@@ -8,6 +9,7 @@ export function Home() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const[recommendations, setRecommendations] = useState([])
+    const[isLiked, setIsLiked] = useState([])
     const {user, isSignedIn} = useUser()
 
     useEffect(() => {
@@ -38,10 +40,6 @@ export function Home() {
         }
     }, [isSignedIn, user])
 
-    if(loading) {
-        return <div>Loading all products...</div>
-    }
-
     if(error) {
         return <div>Error: {error}</div>
     }
@@ -51,13 +49,16 @@ export function Home() {
             <h2 className="mainHeaders">Recommended for you</h2>
             <div className="AllProducts">
                 {recommendations.map((product) => (
-                    <Link to={`/product/${product.id}`} key={product.id} className="productLink">
-                        <div className="productCard">
+                    <div key={product.id} className="productCard">
+                        <Link to={`/product/${product.id}`} key={product.id} className="productLink">
                             <img src={product.image} alt={product.name} style={{maxWidth: '100%'}}/>
                             <p>{product.name}</p>
                             <p>{product.brand}</p>
-                        </div>
-                    </Link>
+                            <p>{product.category}</p>
+                        </Link>
+                        <Likes product={product} />
+                    </div>
+                    
                 ))}
             </div>
             <h1 className="mainHeaders">All Products</h1>
@@ -74,6 +75,7 @@ export function Home() {
                                     <li>{product.features}</li>
                                 </ul>
                             </Link>
+                            <Likes product={product} />
                         </div>
                     ))}
                 </div>

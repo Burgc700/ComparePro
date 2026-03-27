@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
+import Likes from '../Components/Likes'
 import "./ProductPerSite.css"
 import "../Components/Navbar.css"
 
@@ -94,6 +95,7 @@ export function ProductPerSite() {
     return (
         <>
             <h1 className="mainHeaders">{product.name}</h1>
+            <Likes product={product} />
             <img src={product.image} style={{ maxWidth: '100%' }}></img>
             <div className="ProductInfo">
                 <h5>{product.brand}</h5>
@@ -129,8 +131,6 @@ export function ProductPerSite() {
                     </ul>
                 </div>
             </div>
-
-                
         </>
     )
 }

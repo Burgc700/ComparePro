@@ -43,13 +43,6 @@ class ProductsModel(db.Model):
     def __repr__(self):
         return f"Product name: {self.name}, Brand: {self.brand}, Model_num: {self.model_num} Category: {self.category}, Image URL: {self.image}, features: {self.features})"
 
-# product_args = reqparse.RequestParser()
-# product_args.add_argument('name', type=str, required=True, location="args")
-# product_args.add_argument('brand', type=str, required=True, location="args")
-# product_args.add_argument('category', type=str, required=True, location="args")
-# product_args.add_argument('Model Number', type=str, required=True, location="args")
-# product_args.add_argument('Features', type=str, required=True, location="args")
-
 productFields = {
     'id': fields.Integer,
     'name': fields.String,
@@ -98,6 +91,53 @@ class SearchProducts(Resource):
         return marshal(results, productFields), 200
 
 #endregion    
+
+#region Likes
+class LikesModel(db.Model):
+    __tablename__ = "Likes"
+    __table_args__ = (db.UniqueConstraint('User_id', 'Product_id', name='UQ_User_Product'),
+                      {'schema' : 'Users'})
+    id = db.Column('Like_id', db.Integer, primary_key = True)
+    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
+    user_id = db.Column('User_id', db.String(100), nullable=False)
+    created_at = db.Column('Created_at', db.DateTime, default=db.func.now())
+
+    def __repr__(self):
+        return(f"Like_id: {self.id}, by {self.user_id}, Product: {self.product_id} at {self.created_at}")
+    
+likeFields = {
+    'id': fields.Integer,
+    'product_id': fields.Integer,
+    'user_id': fields.String
+}
+
+class GetLikedItems(Resource):
+    #@marshal_with(likeFields)
+    def get(self, user_id, product_id=None):
+        if product_id:
+            like = LikesModel.query.filter_by(user_id=user_id, product_id=product_id).first()
+            return {"Liked": like is not None}, 200
+        else:
+            likes = LikesModel.query.filter_by(user_id=user_id).all()
+            likedItems = [like.product_id for like in likes]
+            return likedItems, 200
+    
+class ToggleLikes(Resource):
+    def post(self, product_id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('user_id', type=str, required=True, location='json')
+        args = parser.parse_args()
+        alreadyLiked = LikesModel.query.filter_by(user_id=args['user_id'], product_id=product_id).first()
+        if alreadyLiked:
+            db.session.delete(alreadyLiked)
+            db.session.commit()
+            return {'liked': False}, 200
+        else:
+            newLike = LikesModel(user_id=args['user_id'], product_id=product_id)
+            db.session.add(newLike)
+            db.session.commit()
+            return {'liked': True}, 201
+#endregion
 
 #region Recommendations
 class RecommendationModel(db.Model):
@@ -232,6 +272,9 @@ api.add_resource(AddComment, '/api/comments/add/<int:product_id>')
 api.add_resource(SearchProducts, '/api/products/search')
 api.add_resource(Recommendations, '/api/recommendations/<string:user_id>')
 api.add_resource(TrackViewedProducts, '/api/track-view/<int:product_id>')
+api.add_resource(GetLikedItems, '/api/liked/<string:user_id>/<int:product_id>')
+api.add_resource(ToggleLikes, '/api/likes/toggle/<int:product_id>')
+api.add_resource(GetLikedItems, '/api/liked/<string:user_id>', endpoint='all_likes')
 
 @app.route('/')
 def home():

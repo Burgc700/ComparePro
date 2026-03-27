@@ -31,7 +31,7 @@ CREATE TABLE Products.Products(
 	Image_URL NVARCHAR(1000),
 	Features NVARCHAR(MAX),
 	Created_On DATETIME DEFAULT(SYSDATETIMEOFFSET()),
-	Updated_On DATETIME DEFAULT(SYSDATETIMEOFFSET()),
+	Updated_On DATETIME DEFAULT(SYSDATETIMEOFFSET())
 );
 
 CREATE TABLE Products.Price(
@@ -66,6 +66,18 @@ CREATE TABLE Users.Recommendations(
 
     CONSTRAINT FK3_Product_id FOREIGN KEY(Product_id)
         REFERENCES Products.Products(Product_id)
+);
+
+CREATE TABLE Users.Likes(
+    Like_id INT IDENTITY(1,1) PRIMARY KEY,
+    Product_id INT NOT NULL,
+    User_id NVARCHAR(100) NOT NULL,
+    Created_at DATETIME DEFAULT(GETDATE()),
+
+    CONSTRAINT FK4_Product_id FOREIGN KEY(Product_id)
+        REFERENCES Products.Products(Product_id),
+
+    CONSTRAINT UQ_User_Product UNIQUE(User_id, Product_id)
 );
 
 --indexs (possibly later)
@@ -188,6 +200,11 @@ VALUES
     (4, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW'),
     (12, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW')
 
+INSERT INTO Users.Likes(Product_id, User_id)
+VALUES
+    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW'),
+    (10, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW')
+
 --Testing to make sure everything is there
 SELECT * FROM Products.Products WHERE Product_Category = 'CPU'
 
@@ -208,3 +225,5 @@ GROUP BY Product_id
 SELECT * FROM Users.User_comments
 
 SELECT * FROM Users.Recommendations
+
+SELECT * FROM Users.Likes

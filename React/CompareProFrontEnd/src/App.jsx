@@ -9,6 +9,7 @@ import { SSD } from "./Pages/SSD"
 import { Layout } from "./Components/Layout"
 import { ProductPerSite } from "./Pages/ProductPerSite"
 import { SearchResults } from "./Pages/SearchResults"
+import LikedItems from "./Pages/LikedItems"
 import './App.css'
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/gpu" element={<GPU />} />
           <Route path="/ram" element={<RAM />} />
           <Route path="/ssd" element={<SSD />} />
+          <Route path="/LikedItems" element={<LikedItems />} />
         </Route>
       </Routes>
     </Router>
