@@ -94,8 +94,10 @@ export function ProductPerSite() {
 
     return (
         <>
-            <h1 className="mainHeaders">{product.name}</h1>
-            <Likes product={product} />
+            <div className="Top">
+                <h1 className="mainHeaders">{product.name}</h1>
+                <Likes product={product} />
+            </div>
             <img src={product.image} style={{ maxWidth: '100%' }}></img>
             <div className="ProductInfo">
                 <h5>{product.brand}</h5>

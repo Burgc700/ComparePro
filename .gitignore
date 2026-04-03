@@ -1,4 +1,7 @@
 .venv/
-All_products.csv
 All_productsv2.csv
 updated_prices.csv
+FinalPrices.csv
+MatchedPrices.csv
+ProductInfo_progress2.0.csv
+ProductInfo2.0.csv

@@ -47,7 +47,12 @@ export function CPU() {
                                 <p>{product.model_num}</p>
                                 <p>{product.category}</p>
                                 <ul className="featuresList">
-                                    <li>{product.features}</li>
+                                    {product.features
+                                        ?.split("|")
+                                        .map((features, i) => (
+                                            <li key={i}>{features.trim()}</li>
+                                        ))
+                                    }
                                 </ul>
                             </Link>
                             <Likes product={product} />

@@ -9,7 +9,6 @@ export function Home() {
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const[recommendations, setRecommendations] = useState([])
-    const[isLiked, setIsLiked] = useState([])
     const {user, isSignedIn} = useUser()
 
     useEffect(() => {
@@ -39,6 +38,10 @@ export function Home() {
                 .catch(error => console.error('Recommendations error:', error))
         }
     }, [isSignedIn, user])
+
+    if(loading) {
+        return <div>Loading all products</div>
+    }
 
     if(error) {
         return <div>Error: {error}</div>
@@ -72,7 +75,12 @@ export function Home() {
                                 <p>{product.model_num}</p>
                                 <p>{product.category}</p>
                                 <ul className="featuresList">
-                                    <li>{product.features}</li>
+                                    {product.features
+                                        ?.split("|")
+                                        .map((features, i) => (
+                                            <li key={i}>{features.trim()}</li>
+                                        ))
+                                    }
                                 </ul>
                             </Link>
                             <Likes product={product} />

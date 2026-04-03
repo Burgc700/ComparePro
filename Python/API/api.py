@@ -171,7 +171,7 @@ class Recommendations(Resource):
             ProductsModel.category.in_(categories),
             ProductsModel.brand.in_(brands),
             ~ProductsModel.id.in_(viewedProducts)
-        ).limit(4).all()
+        ).limit(6).all()
         return recommended
     
 class TrackViewedProducts(Resource):
