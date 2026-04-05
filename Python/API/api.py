@@ -1,12 +1,13 @@
-
 import urllib
 import pyodbc
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Numeric
+from extensions import db
 from flask_restful import Api, Resource, reqparse, fields, marshal_with, abort
 from flask_cors import CORS
 from flask_restful import marshal
+from Models.Models import ProductsModel, PricesModel, CommentsModel, RecommendationModel, LikesModel
+from Business.LikeService import LikesService
+from Business.RecommendationsService import RecommendationsService
 
 
 app = Flask(__name__)
@@ -23,26 +24,12 @@ params = urllib.parse.quote_plus(
 )
 app.config['SQLALCHEMY_DATABASE_URI'] = f"mssql+pyodbc:///?odbc_connect={params}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+db.init_app(app)
 #endregion
 
 api = Api(app)
 
 #region Products
-class ProductsModel(db.Model):
-    __tablename__ = 'Products'
-    __table_args__ = {'schema': 'Products'}
-    id = db.Column('Product_id', db.Integer, primary_key = True)
-    name = db.Column('Product_name', db.String(400), nullable = True)
-    brand = db.Column('Brand', db.String(50), nullable = True)
-    model_num = db.Column('Model_number', db.String(50), nullable = True)
-    category = db.Column('Product_Category', db.String(50), nullable = True)
-    image = db.Column('Image_URL', db.String(1000))
-    features = db.Column('Features', db.String(1073741823))
-
-    def __repr__(self):
-        return f"Product name: {self.name}, Brand: {self.brand}, Model_num: {self.model_num} Category: {self.category}, Image URL: {self.image}, features: {self.features})"
-
 productFields = {
     'id': fields.Integer,
     'name': fields.String,
@@ -92,19 +79,7 @@ class SearchProducts(Resource):
 
 #endregion    
 
-#region Likes
-class LikesModel(db.Model):
-    __tablename__ = "Likes"
-    __table_args__ = (db.UniqueConstraint('User_id', 'Product_id', name='UQ_User_Product'),
-                      {'schema' : 'Users'})
-    id = db.Column('Like_id', db.Integer, primary_key = True)
-    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
-    user_id = db.Column('User_id', db.String(100), nullable=False)
-    created_at = db.Column('Created_at', db.DateTime, default=db.func.now())
-
-    def __repr__(self):
-        return(f"Like_id: {self.id}, by {self.user_id}, Product: {self.product_id} at {self.created_at}")
-    
+#region Likes 
 likeFields = {
     'id': fields.Integer,
     'product_id': fields.Integer,
@@ -112,7 +87,6 @@ likeFields = {
 }
 
 class GetLikedItems(Resource):
-    #@marshal_with(likeFields)
     def get(self, user_id, product_id=None):
         if product_id:
             like = LikesModel.query.filter_by(user_id=user_id, product_id=product_id).first()
@@ -127,32 +101,13 @@ class ToggleLikes(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=str, required=True, location='json')
         args = parser.parse_args()
-        alreadyLiked = LikesModel.query.filter_by(user_id=args['user_id'], product_id=product_id).first()
-        if alreadyLiked:
-            db.session.delete(alreadyLiked)
-            db.session.commit()
-            return {'liked': False}, 200
-        else:
-            newLike = LikesModel(user_id=args['user_id'], product_id=product_id)
-            db.session.add(newLike)
-            db.session.commit()
+        liked = LikesService.toggle_likes(args['user_id'], product_id)
+        if liked:
             return {'liked': True}, 201
+        return {'liked': False}, 200
 #endregion
 
 #region Recommendations
-class RecommendationModel(db.Model):
-    __tablename__ = 'Recommendations'
-    __table_args__ = {'schema': 'Users'}
-    id = db.Column('View_id', db.Integer, primary_key = True)
-    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
-    user_id = db.Column('User_id', db.String(100), nullable = False)
-    viewed_at = db.Column('Viewed_at', db.DateTime, default=db.func.now())
-
-    def __repr__(self):
-        return(f"View_id: {self.id} Product_id: {self.product_id} User_id: {self.user_id}")
-    
-    #reqparse stuff if need
-
 viewFields = {
     'id': fields.Integer,
     'product_id': fields.Integer,
@@ -162,49 +117,22 @@ viewFields = {
 class Recommendations(Resource):
     @marshal_with(productFields)
     def get(self, user_id):
-        viewHistory = RecommendationModel.query.filter_by(user_id=user_id).all()
-        viewedProducts = [v.product_id for v in viewHistory]
-        displayProducts = ProductsModel.query.filter(ProductsModel.id.in_(viewedProducts)).all()
-        categories = list(set([p.category for p in displayProducts]))
-        brands = list(set([p.brand for p in displayProducts]))
-        recommended = ProductsModel.query.filter(
-            ProductsModel.category.in_(categories),
-            ProductsModel.brand.in_(brands),
-            ~ProductsModel.id.in_(viewedProducts)
-        ).limit(6).all()
-        return recommended
+        return RecommendationsService.get_recommended_for_user(user_id)
     
 class TrackViewedProducts(Resource):
     def post(self, product_id):
         parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=str, required=True, location='json')
         args = parser.parse_args()
-        viewedProduct = RecommendationModel(user_id=args['user_id'], product_id=product_id)
-        db.session.add(viewedProduct)
-        db.session.commit()
+        RecommendationsService.track_view(
+            args['user_id'],
+            product_id
+        )
         return {'message': 'View tracked'}, 201
 
 #endregion
 
 #region Prices
-class PricesModel(db.Model):
-    __tablename__ = 'Price'
-    __table_args__ = {'schema': 'Products'}
-    id = db.Column('Price_id', db.Integer, primary_key = True)
-    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=True)
-    store = db.Column('Store', db.String(20), nullable = True)
-    price = db.Column('Price', Numeric(6, 2), nullable = True)
-    rating = db.Column('Rating', Numeric(2, 1), nullable = True)
-    url = db.Column('URL', db.String(1000))
-
-    def __repr__(self):
-        return f"Product id: {self.product_id}, store: {self.store}, price: {self.price} Rating: {self.rating}, URL: {self.url})"
-
-# price_args = reqparse.RequestParser()
-# price_args.add_argument('product_id', type=int, required=True)
-# price_args.add_argument('store', type=str, required=True)
-# price_args.add_argument('price', type=float, required=True)
-
 priceFields = {
     'id': fields.Integer,
     'product_id': fields.Integer,
@@ -222,18 +150,6 @@ class Prices(Resource):
 #endregion
  
 #region Comments
-class CommentsModel(db.Model):
-    __tablename__ = 'User_Comments'
-    __table_args__ = {'schema': 'Users'}
-    id = db.Column('Comment_id', db.Integer, primary_key = True)
-    product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
-    user_id = db.Column('User_id', db.String(100), nullable = False)
-    text = db.Column('Text', db.String(1073741823), nullable = False)
-    created_at = db.Column('Created_at', db.DateTime, default=db.func.now())
-
-    def __repr__(self):
-        return (f"Comment id: {self.id} Product id: {self.product_id} User id: {self.user_id} Comment: {self.text}")
-
 comment_args = reqparse.RequestParser()
 comment_args.add_argument('user_id', type=str, required=True, location="json")
 comment_args.add_argument('text', type=str, required=True, location="json")
@@ -259,7 +175,6 @@ class AddComment(Resource):
         db.session.add(comment)
         db.session.commit()
         db.session.refresh(comment)
-        #comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.created_at.desc()).all()
         return comment, 201
 #endregion
 
