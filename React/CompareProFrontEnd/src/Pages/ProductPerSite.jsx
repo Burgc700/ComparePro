@@ -96,19 +96,29 @@ export function ProductPerSite() {
         <>
             <div className="Top">
                 <h1 className="mainHeaders">{product.name}</h1>
-                <Likes product={product} />
             </div>
             <img src={product.image} style={{ maxWidth: '100%' }}></img>
             <div className="ProductInfo">
-                <h5>{product.brand}</h5>
-                <h5>{product.category}</h5>
+                <h5>Brand: {product.brand}</h5>
+                <h5>Category: {product.category}</h5>
+                <h5>Model Number: {product.model_num}</h5>
+                <div className='featuresContainer'>
+                    <ul className="featuresList">
+                        {product.features
+                            ?.split("|")
+                            .map((features, i) => (
+                                <li key={i}>{features.trim()}</li>
+                            ))}
+                    </ul> 
+                </div>
             </div>
+            <Likes product={product} />
 
             <h2>Comparison between sites</h2>
             <div className="priceComparison">
 
                 {prices.map((prices, index) => (
-                    <div key={index} className="productCard">
+                    <div key={index} className="priceComp">
                         <h3><strong>{prices.store}</strong></h3>
                         <p>{prices.price}</p>
                         <p>{prices.rating}</p>

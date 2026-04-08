@@ -41,19 +41,19 @@ export function GPU() {
                     {Products.map((product, index) => ( 
                         <div key={index} className="productCard">
                             <Link to={`/product/${product.id}`} key={index} className="productLink">
-                                <img src={product.image} style={{maxWidth: '100%'}} />
+                                <img className='productimg' src={product.image} style={{maxWidth: '100%'}} />
                                 <p>{product.name}</p>
-                                <p>{product.brand}</p>
-                                <p>{product.model_num}</p>
-                                <p>{product.category}</p>
-                                <ul className="featuresList">
+                                <p>Brand: {product.brand}</p>
+                                <p>Model Number: {product.model_num}</p>
+                                <p>Category: {product.category}</p>
+                                {/* <ul className="featuresList">
                                     {product.features
                                         ?.split("|")
                                         .map((features, i) => (
                                             <li key={i}>{features.trim()}</li>
                                         ))
                                     }
-                                </ul>
+                                </ul> */}
                             </Link>
                             <Likes product={product} />
                         </div>
