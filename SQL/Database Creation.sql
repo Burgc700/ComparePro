@@ -29,7 +29,7 @@ CREATE TABLE Products.Products(
 	Model_Number NVARCHAR(100),
 	Product_Category NVARCHAR(50) NOT NULL,
 	Image_URL NVARCHAR(1000),
-	Features NVARCHAR(MAX),
+	Features NVARCHAR(MAX)
 	--Created_On DATETIME DEFAULT(SYSDATETIMEOFFSET()),
 	--Updated_On DATETIME DEFAULT(SYSDATETIMEOFFSET())
 );
@@ -40,7 +40,7 @@ CREATE TABLE Products.Price(
 	Store NVARCHAR(20) NOT NULL,
 	Price DECIMAL(8, 2) NOT NULL,
 	Rating DECIMAL(2, 1) NOT NULL,
-	[URL] NVARCHAR(1000),
+	[URL] NVARCHAR(1000)
 	--Scrapped_At DATETIME DEFAULT(SYSDATETIMEOFFSET()),
 
 	CONSTRAINT FK1_Product_id FOREIGN KEY(Product_id)
@@ -52,6 +52,7 @@ CREATE TABLE Users.User_Comments(
     Product_id INT NOT NULL,
     User_id NVARCHAR(100) NOT NULL,
     [Text] NVARCHAR(MAX) NOT NULL,
+    Comment_field NVARCHAR(50),
     Created_at DATETIME DEFAULT(SYSDATETIME()),
 
     CONSTRAINT FK2_Product_id FOREIGN KEY(Product_id)
@@ -592,10 +593,11 @@ VALUES
     (165, 'microcenter', 269.99, 4.3, 'https://www.microcenter.com/product/676673/sandisk-2tb-portable-ssd-usb-32-gen-2-type-a-external-solid-state-drive'),
     (165, 'newegg', 298.95, 4.6, 'https://www.newegg.com/sandisk-portable-ssd-2tb/p/N82E16820173638');
 
-INSERT INTO Users.User_Comments(Product_id, User_id, [Text])
+INSERT INTO Users.User_Comments(Product_id, User_id, [Text], Comment_field)
 VALUES
-    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is a test.'),
-    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is another test.');
+    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is a test.', NULL),
+    (1, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'This is another test.', NULL),
+    (2, 'user_3ADS3TmrTw3sWbzJXDtp19B2iAW', 'Test with field', 'pro')
 
 INSERT INTO Users.Recommendations(Product_id, User_id)
 VALUES

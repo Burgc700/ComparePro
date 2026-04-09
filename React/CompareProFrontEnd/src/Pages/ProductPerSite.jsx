@@ -14,6 +14,8 @@ export function ProductPerSite() {
     const [ prices, setPrices ] = useState([])
     const [ inputText, setInputText ] = useState('')
     const [ commentList, setCommentList ] = useState([])
+    const [ selectField, setSelectField] = useState("pro")
+    const [ customField, setCustomField ] = useState("")
 
     useEffect(() => {
         setCommentList([])
@@ -69,6 +71,7 @@ export function ProductPerSite() {
             alert('Sign in to comment')
             return
         }
+        const finalField = selectField === "custom" ? customField : selectField
         if(inputText.trim() !== '') {
             fetch(`http://localhost:5000/api/comments/add/${id}`, {
                 method: 'POST',
@@ -132,6 +135,20 @@ export function ProductPerSite() {
             </div>
             <h2>Comments</h2>
             <div className="commentBox">
+                <label className='searchBar' htmlFor='fields'>Field</label>
+                <select className='selectField' value={selectField} onChange={(e) => setSelectField(e.target.value)}>
+                    <option value="pro">Pro</option>
+                    <option value="con">Con</option>
+                    <option value="purpose">Purpose(gaming, workstation, ect.)</option>
+                    <option value="build">Build Quality</option>
+                    <option value='custom'>Make your own</option>
+                </select>
+                {selectField === "custom" && (
+                    <>
+                        <label className="searchBar" htmlFor="customField">Custom Field</label>
+                        <input id="customField" className="comments" type="text" onChange={(e) => setCustomField(e.target.value)} placeholder="Enter your own field"/>
+                    </>
+                )}
                 <label className="searchBar" htmlFor="comments">Comments </label>
                 <input className="comments" type="text" value={inputText} onChange={HandleInputChange}/>
                 <button className="searchBtn" onClick={HandleButtonClick}>Add Comment</button>
@@ -139,7 +156,7 @@ export function ProductPerSite() {
                     <ul className="list">
                         {commentList.map((comment) => (
                             <li key={comment.id}>
-                                <p>{comment.text}</p>
+                                <p><strong>{comment.field}</strong> {comment.text}</p>
                             </li>
                         ))}
                     </ul>

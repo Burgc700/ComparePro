@@ -59,8 +59,9 @@ class CommentsModel(db.Model):
     id = db.Column('Comment_id', db.Integer, primary_key = True)
     product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
     user_id = db.Column('User_id', db.String(100), nullable = False)
+    field = db.Column('Comment_field', db.String(50), nullable = True)
     text = db.Column('Text', db.String(1073741823), nullable = False)
     created_at = db.Column('Created_at', db.DateTime, default=db.func.now())
 
     def __repr__(self):
-        return (f"Comment id: {self.id} Product id: {self.product_id} User id: {self.user_id} Comment: {self.text}")
+        return (f"Comment id: {self.id} Product id: {self.product_id} User id: {self.user_id} Comment: {self.text} Field: {self.field}")

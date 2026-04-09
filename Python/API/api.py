@@ -153,25 +153,27 @@ class Prices(Resource):
 comment_args = reqparse.RequestParser()
 comment_args.add_argument('user_id', type=str, required=True, location="json")
 comment_args.add_argument('text', type=str, required=True, location="json")
+comment_args.add_argument('field', type=str, required=False, location="json")
 
 commentFields = {
     'id': fields.Integer,
     'product_id': fields.Integer,
     'user_id': fields.String,
     'text': fields.String,
+    'field': fields.String,
     'created_at': fields.DateTime
 }
 
 class CommentsForProduct(Resource):
     def get(self, product_id):
-        comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.created_at.desc()).all()
+        comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.field).all()
         return marshal(comments, commentFields), 200
     
 class AddComment(Resource):
     @marshal_with(commentFields)
     def post(self, product_id):
         args = comment_args.parse_args()
-        comment = CommentsModel(product_id=product_id, user_id=args['user_id'], text=args['text'])
+        comment = CommentsModel(product_id=product_id, user_id=args['user_id'], text=args['text'], field=args['field'])
         db.session.add(comment)
         db.session.commit()
         db.session.refresh(comment)
