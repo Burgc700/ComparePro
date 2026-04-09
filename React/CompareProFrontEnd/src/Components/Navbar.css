@@ -1,20 +1,26 @@
-/*.header{
-    background-color: purple;
-}*/
-
 .nav {
-    align-items: top;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    max-width: 60rem;
+    margin: 0 auto;
+
+    gap: 0.5rem;
+    flex-wrap: nowrap;
 }
 
 .navBtn {
-    align-items: center;
-    margin: 5px
+    margin: 0.3125rem;
+    max-width: 300px;
 }
 
 .searchBar {
-    margin: 5px;
+    margin: 0.3125rem;
 }
 
 .searchBtn {
-    margin: 5px;
+    margin: 0.3125rem;
+    color: #00C2FF;
 }

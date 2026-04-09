@@ -97,7 +97,9 @@ export function ProductPerSite() {
             <div className="Top">
                 <h1 className="mainHeaders">{product.name}</h1>
             </div>
-            <img src={product.image} style={{ maxWidth: '100%' }}></img>
+            <div className='ProductImg'>
+                <img src={product.image} style={{ maxWidth: '100%' }}></img>
+            </div>
             <div className="ProductInfo">
                 <h5>Brand: {product.brand}</h5>
                 <h5>Category: {product.category}</h5>
@@ -123,7 +125,7 @@ export function ProductPerSite() {
                         <p>{prices.price}</p>
                         <p>{prices.rating}</p>
                         <a href={prices.url} target="_blank" rel="noopener noreferrer">
-                            <button>View product from {prices.store}</button>
+                            <button className="websiteBtn">View product from {prices.store}</button>
                         </a>
                     </div>
                 ))}

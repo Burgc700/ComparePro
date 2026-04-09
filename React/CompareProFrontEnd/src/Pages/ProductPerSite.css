@@ -1,27 +1,29 @@
 .mainHeaders {
     text-align: center;
-    font-size: 3rem;
-    margin: 20px 0;
+    justify-content: center;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 1.25rem 0;
+    /* color: #0b1026; */
 }
 
 .priceComparison {
-    padding: 20px;
-    display: flex;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    padding: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.25rem;
     width: 100%;
+    max-width: 75rem;
     margin: 0 auto;
-    /* align-items: center; */
-    
 }
 
 .priceComp {
-    border: 2px solid white;
-    border-radius: 5px;
-    padding: 15px;
-    margin: 0px;
-    max-width: 300px;
-    margin-left: 200px;
+    border: 0.125rem solid #00C2FF;
+    border-radius: 0.3125rem;
+    padding: 0.9375rem;
+    width: 100%;
+    max-width: 18.75rem;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .productLink {
@@ -30,30 +32,50 @@
 }
 
 .commentsContainer {
-    border: 2px solid white;
-    border-radius: 8px;
-    margin-top: 5px;
+    border: 0.125rem solid #00C2FF;
+    border-radius: 0.5rem;
+    margin-top: 0.3125rem;
+    width: 100%;
+    overflow-wrap: break-word;
 }
 
 .list {
     list-style: none;
     text-align: left;
-    
+    margin-left: 1.5rem;
+    padding-left: 0;
 }
 
 .Top {
-    display: flex;
+    /* display: flex; */
     align-items: center;
-    gap: 40px;
+    gap: 2.5rem;
+    flex-wrap: wrap;
 }
 
 .featuresContainer {
-    align-items: center;
+    display: flex;
     justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 4em;
 }
 
 .featuresList {
     list-style-position: inside;
     text-align: left;
     display: inline-block;
+    margin: 0;
+    padding-left: 0;
+}
+
+.ProductImg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.websiteBtn {
+    color: #00C2FF;
 }

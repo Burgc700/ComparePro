@@ -1,32 +1,41 @@
 .mainHeaders {
     text-align: center;
-    font-size: 3rem;
-    margin: 20px 0;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 1.25rem 0;
 }
 
 .AllProducts {
-    padding: 20px;
+    padding: 1.25rem;
     display: grid;
-    max-width: 1400px;
+    max-width: 87.5rem;
+    width: 100%;
     margin: 0 auto;
-    grid-template-columns: repeat(4, 1fr);
-
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.25rem;
 }
 
 .productCard {
-    border: 2px solid white;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 10px;
-    max-height: 600px;
+    border: 0.125rem solid #00C2FF;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    width: 100%;
+    min-height: 100%;
+    overflow: hidden;
+    padding-bottom: 4em;
 }
 
 .productLink {
     text-decoration: none;
     color: inherit;
+    display: block;
+    height: 100%;
 }
 
 .productimg {
-    height: 175px;
+    width: 100%;
+    max-width: 100%;
+    height: clamp(9rem, 18vw, 11rem);
     object-fit: contain;
+    display: block;
+    margin: 0 auto 1rem;
 }
