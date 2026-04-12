@@ -3,17 +3,35 @@
 }
 
 .topComps {
-    border: 2px solid white;
+    border: 2px solid #00C2FF;
     padding: 30px;
 }
 
 .bottomComps {
-    border: 2px solid white;
+    border: 2px solid #00C2FF;
     padding: 30px;
 }
 
 .Pictures {
     text-align: center;
     margin-bottom: 30px;
-    
+}
+
+.buttons {
+    color: #00C2FF;
+}
+
+.authBtn {
+    color: #00C2FF;
+    background-color: #001F3F;
+    border: none;
+    padding: 0.75em 1.5em;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-left: 1em;
+}
+
+.authBtn:hover {
+    opacity: 0.9;
 }

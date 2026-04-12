@@ -9,6 +9,7 @@ import { SSD } from "./Pages/SSD"
 import { Layout } from "./Components/Layout"
 import { ProductPerSite } from "./Pages/ProductPerSite"
 import { SearchResults } from "./Pages/SearchResults"
+import { CompareProducts } from "./Pages/CompareProducts"
 import LikedItems from "./Pages/LikedItems"
 import './App.css'
 
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/signinsignup" element={<SignInSignUp />} />
         <Route path="/product/:id" element={<ProductPerSite />} />
         <Route path="/search" element={<SearchResults/>}/>
+        <Route path="/compare/:originalID/:comparedID" element={<CompareProducts />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
           <Route path="/cpu" element={<CPU />} />

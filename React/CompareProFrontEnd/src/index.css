@@ -71,7 +71,8 @@ button {
 }
 
 button:hover {
-  border-color: #646cff;
+  /* border-color: #646cff; */
+  opacity: 0.9;
 }
 
 button:focus,
@@ -86,7 +87,8 @@ button:focus-visible {
   }
 
   a:hover {
-    color: #747bff;
+    /* color: #747bff; */
+    opacity: 0.9;
   }
 
   button {

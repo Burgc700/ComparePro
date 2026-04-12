@@ -12,8 +12,12 @@
 }
 
 .navBtn {
-    margin: 0.3125rem;
-    max-width: 300px;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .searchBar {

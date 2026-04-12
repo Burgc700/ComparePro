@@ -8,6 +8,7 @@ from flask_restful import marshal
 from Models.Models import ProductsModel, PricesModel, CommentsModel, RecommendationModel, LikesModel
 from Business.LikeService import LikesService
 from Business.RecommendationsService import RecommendationsService
+from Business.CommentService import CommentService
 
 
 app = Flask(__name__)
@@ -156,12 +157,21 @@ comment_args.add_argument('text', type=str, required=True, location="json")
 comment_args.add_argument('field', type=str, required=False, location="json")
 
 commentFields = {
-    'id': fields.Integer,
+     'id': fields.Integer,
     'product_id': fields.Integer,
     'user_id': fields.String,
     'text': fields.String,
     'field': fields.String,
     'created_at': fields.DateTime
+}
+
+compareCommentFields = {
+    'id': fields.Integer,
+    'product_id': fields.Integer,
+    'product_name': fields.String,
+    'category': fields.String,
+    'text': fields.String,
+    'field': fields.String
 }
 
 class CommentsForProduct(Resource):
@@ -178,6 +188,12 @@ class AddComment(Resource):
         db.session.commit()
         db.session.refresh(comment)
         return comment, 201
+
+class FindSameCategoryWithComments(Resource):
+    @marshal_with(compareCommentFields)
+    def get(self, product_id):
+        return CommentService.Get_other_products(product_id)
+        
 #endregion
 
 api.add_resource(Products, '/api/products')
@@ -192,6 +208,7 @@ api.add_resource(TrackViewedProducts, '/api/track-view/<int:product_id>')
 api.add_resource(GetLikedItems, '/api/liked/<string:user_id>/<int:product_id>')
 api.add_resource(ToggleLikes, '/api/likes/toggle/<int:product_id>')
 api.add_resource(GetLikedItems, '/api/liked/<string:user_id>', endpoint='all_likes')
+api.add_resource(FindSameCategoryWithComments, '/api/comments/compare/<int:product_id>')
 
 @app.route('/')
 def home():

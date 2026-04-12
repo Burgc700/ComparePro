@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
 import Likes from '../Components/Likes'
@@ -16,6 +17,11 @@ export function ProductPerSite() {
     const [ commentList, setCommentList ] = useState([])
     const [ selectField, setSelectField] = useState("pro")
     const [ customField, setCustomField ] = useState("")
+    const [ compareComment, setCompareComment ] = useState([])
+    const [ compareProduct, setCompareProduct ] = useState([])
+    const [ selectedToCompare, setSelectedToCompare ] = useState("")
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         setCommentList([])
@@ -52,6 +58,29 @@ export function ProductPerSite() {
         }
     },[product, id, isSignedIn, user])
 
+    useEffect(() => {
+        if(product) {
+            fetch(`http://localhost:5000/api/comments/compare/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    setCompareComment(data)
+                    const sameCategory = []
+                    const seen = new Set()
+                    data.forEach((item) => {
+                        if(!seen.has(item.product_id)) {
+                            seen.add(item.product_id)
+                            sameCategory.push({
+                                product_id: item.product_id,
+                                product_name: item.product_name
+                            })
+                        }
+                    })
+                    setCompareProduct(sameCategory)
+                })
+                .catch(error => console.error("Compare comments error: ", error))
+        }
+    }, [product, id])
+
     if (loading) {
         return <div>Loading products...</div>
     }
@@ -80,6 +109,7 @@ export function ProductPerSite() {
                 },
                 body: JSON.stringify({
                     user_id: user.id,
+                    field: finalField,
                     text: inputText
                 })
             })
@@ -93,6 +123,14 @@ export function ProductPerSite() {
                 alert('Failed to add comment')
             })
         }
+    }
+
+    const HandleCompareClick = () => {
+                if(!selectedToCompare) {
+            alert("Select a product to compare.")
+            return
+        }
+        navigate(`/compare/${id}/${selectedToCompare}`)
     }
 
     return (
@@ -117,7 +155,22 @@ export function ProductPerSite() {
                     </ul> 
                 </div>
             </div>
-            <Likes product={product} />
+
+            <div>
+                <Likes product={product} />
+            </div>
+            <div>
+                <label htmlFor="compareProduct">Compare with: </label>
+                    <select id="compareProduct" value={selectedToCompare} onChange={(e) => setSelectedToCompare(e.target.value)}>
+                        <option value="">Select a product to compare</option>
+                        {compareProduct.map((product) => (
+                            <option key={product.product_id} value={product.product_id}>
+                                {product.product_name}
+                            </option>
+                        ))}
+                    </select>
+                <button className='searchBtn' onClick={HandleCompareClick}>Compare</button>
+            </div>
 
             <h2>Comparison between sites</h2>
             <div className="priceComparison">
@@ -137,6 +190,7 @@ export function ProductPerSite() {
             <div className="commentBox">
                 <label className='searchBar' htmlFor='fields'>Field</label>
                 <select className='selectField' value={selectField} onChange={(e) => setSelectField(e.target.value)}>
+                    <option value="general_comment">General Comment</option>
                     <option value="pro">Pro</option>
                     <option value="con">Con</option>
                     <option value="purpose">Purpose(gaming, workstation, ect.)</option>
@@ -152,6 +206,15 @@ export function ProductPerSite() {
                 <label className="searchBar" htmlFor="comments">Comments </label>
                 <input className="comments" type="text" value={inputText} onChange={HandleInputChange}/>
                 <button className="searchBtn" onClick={HandleButtonClick}>Add Comment</button>
+                {/* <label htmlFor="compareProduct">Compare with:</label>
+                <select id="compareProduct" value={selectedToCompare} onChange={(e) => setSelectedToCompare(e.target.value)}>
+                    <option value="">Select a product to compare</option>
+                    {compareProduct.map((product) => (
+                        <option key={product.product_id} value={product.product_id}>
+                            {product.product_name}
+                        </option>
+                    ))}
+                </select> */}
                 <div className="commentsContainer">
                     <ul className="list">
                         {commentList.map((comment) => (

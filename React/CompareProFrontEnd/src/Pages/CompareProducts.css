@@ -1,0 +1,35 @@
+.comparePage {
+    width: 100%;
+    padding: 1.25rem;
+}
+
+.compareGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+    align-items: start;
+    margin-top: 4em;
+}
+
+.compareColumn {
+    border: 0.125rem solid #00C2FF;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.compareColumn img {
+    display: block;
+    margin: 0 auto 1rem;
+    max-width: 100%;
+    height: auto;
+}
+
+.compareColumn ul {
+    text-align: left;
+}
+
+@media (max-width: 48rem) {
+    .compareGrid {
+        grid-template-columns: 1fr;
+    }
+}

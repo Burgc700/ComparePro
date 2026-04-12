@@ -21,8 +21,12 @@ function SignInSignUp() {
           <h3 className='options'>Sign In or Sign Up to get started</h3>
           <SignedOut>
             <div className='Buttons'>
-              <SignInButton forceRedirectUrl="/home" />
-              <SignUpButton forceRedirectUrl="/home" />
+              <SignInButton forceRedirectUrl="/home">
+                <button className="authBtn">Sign In</button>
+              </SignInButton>
+              <SignUpButton forceRedirectUrl="/home">
+                <button className="authBtn">Sign Up</button>
+              </SignUpButton>
             </div>
           </SignedOut>
           <SignedIn>
