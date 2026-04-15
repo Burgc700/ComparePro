@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link, useSearchParams } from "react-router-dom"
+import Likes from '../Components/Likes'
 import "./Home.css"
 
 export function SearchResults() {
@@ -48,10 +49,8 @@ export function SearchResults() {
                                 <p>{product.brand}</p>
                                 <p>{product.model_num}</p>
                                 <p>{product.category}</p>
-                                <ul className="featuresList">
-                                    <li>{product.features}</li>
-                                </ul>
                             </Link>
+                            <Likes product={product} /> 
                         </div>
                     ))}
                 </div>

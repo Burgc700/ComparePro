@@ -18,6 +18,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #f9f9f9;    
 }
 
 .searchBar {
@@ -26,5 +27,5 @@
 
 .searchBtn {
     margin: 0.3125rem;
-    color: #00C2FF;
+    color: #f9f9f9;
 }

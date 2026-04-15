@@ -54,7 +54,7 @@ a:hover {
 h1 {
   font-size: clamp(2rem, 4vw, 3.2rem);
   line-height: 1.1;
-  color: #001F3F;
+  color: #2F5E86 ;
   margin: 0;
 }
 
@@ -65,7 +65,7 @@ button {
   font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #2F5E86; 
   cursor: pointer;
   transition: border-color 0.25s;
 }

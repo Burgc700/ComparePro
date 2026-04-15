@@ -2,16 +2,13 @@ import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import { Landing } from "./Pages/Landing"
 import { Home } from "./Pages/Home"
 import SignInSignUp from "./Pages/SignInSignUp"
-import { CPU } from "./Pages/CPU"
-import { GPU } from "./Pages/GPU"
-import { RAM } from "./Pages/RAM"
-import { SSD } from "./Pages/SSD"
 import { Layout } from "./Components/Layout"
 import { ProductPerSite } from "./Pages/ProductPerSite"
 import { SearchResults } from "./Pages/SearchResults"
 import { CompareProducts } from "./Pages/CompareProducts"
 import LikedItems from "./Pages/LikedItems"
 import './App.css'
+import { CategoryProducts } from "./Components/CategoryProducts"
 
 export default function App() {
 
@@ -25,10 +22,10 @@ export default function App() {
         <Route path="/compare/:originalID/:comparedID" element={<CompareProducts />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
-          <Route path="/cpu" element={<CPU />} />
-          <Route path="/gpu" element={<GPU />} />
-          <Route path="/ram" element={<RAM />} />
-          <Route path="/ssd" element={<SSD />} />
+          <Route path="/:category" element={<CategoryProducts category="cpu" />} />
+          <Route path="/:category" element={<CategoryProducts category="gpu" />} />
+          <Route path="/:category" element={<CategoryProducts category="ram" />} />
+          <Route path="/:category" element={<CategoryProducts category="ssd" />} />
           <Route path="/LikedItems" element={<LikedItems />} />
         </Route>
       </Routes>
