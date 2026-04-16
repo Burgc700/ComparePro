@@ -44,7 +44,7 @@ export function Recommendations() {
 
     return (
         <>
-            <h2 className="mainHeaders">Recommended for you</h2>
+            <h1 className="mainHeaders">Recommended for you</h1>
             <div className="AllProducts">
                 {recommendations.map((product) => (
                     <div key={product.id} className="productCard">

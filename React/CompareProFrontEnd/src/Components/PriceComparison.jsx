@@ -36,7 +36,7 @@ export function PriceComparison() {
 
     return (
         <>
-            <h2>Comparison between sites</h2>
+            <h2 className="subheader">Comparison between sites</h2>
             <div className="priceComparison">
 
                 {prices.map((prices, index) => (

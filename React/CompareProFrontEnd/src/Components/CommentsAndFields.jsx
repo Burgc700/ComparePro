@@ -71,7 +71,7 @@ export function CommentsAndFields() {
 
     return (
         <>
-            <h2>Comments</h2>
+            <h2 className="subheader">Comments</h2>
             <div className="commentBox">
                 <label className='searchBar' htmlFor='fields'>Field</label>
                 <select className='selectField' value={selectField} onChange={(e) => setSelectField(e.target.value)}>
