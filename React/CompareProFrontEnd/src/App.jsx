@@ -22,10 +22,7 @@ export default function App() {
         <Route path="/compare/:originalID/:comparedID" element={<CompareProducts />} />
         <Route element={<Layout />}>
           <Route path="/home" element={<Home />} />
-          <Route path="/:category" element={<CategoryProducts category="cpu" />} />
-          <Route path="/:category" element={<CategoryProducts category="gpu" />} />
-          <Route path="/:category" element={<CategoryProducts category="ram" />} />
-          <Route path="/:category" element={<CategoryProducts category="ssd" />} />
+          <Route path="/:category" element={<CategoryProducts  />} />
           <Route path="/LikedItems" element={<LikedItems />} />
         </Route>
       </Routes>

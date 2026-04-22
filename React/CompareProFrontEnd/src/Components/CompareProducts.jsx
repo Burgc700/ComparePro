@@ -4,10 +4,10 @@ import { useParams } from "react-router-dom"
 import "../Pages/ProductPerSite.css"
 
 
-export function CompareProducts() {
+export function CompareProducts({refreshList}) {
     const { id } = useParams()
     const [ product, setProduct ] = useState(null)
-    const [ compareComment, setCompareComment ] = useState([])
+    const [ compareComment, setCompareComment ] = useState("")
     const [ compareProduct, setCompareProduct ] = useState([])
     const [ selectedToCompare, setSelectedToCompare ] = useState("")
 
@@ -33,7 +33,7 @@ export function CompareProducts() {
             })
             .catch(error => console.error("Compare comments error: ", error))
         
-    }, [id])
+    }, [id, refreshList])
 
       const HandleCompareClick = () => {
                 if(!selectedToCompare) {

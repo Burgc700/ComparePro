@@ -3,7 +3,7 @@ Imports that are used in this file.
 '''
 import urllib
 import pyodbc
-from flask import Flask
+from flask import Flask, request
 from extensions import db
 from flask_restful import Api, Resource, reqparse, fields, marshal_with, abort
 from flask_cors import CORS
@@ -61,8 +61,19 @@ Get request to get all products from a certain category of product.
 class SortProductsByCategory(Resource):
         @marshal_with(productFields)
         def get(self, category):
-            products = ProductsModel.query.filter_by(category=category).all()
-            return products
+            # products = ProductsModel.query.filter_by(category=category).all()
+            # return products
+            min_price = request.args.get("minPrice", type=float)
+            min_rating = request.args.get("minRating", type=float)
+            products = ProductsModel.query.filter_by(category=category)
+            if min_price is not None or min_rating is not None:
+                products = products.join(PricesModel)
+                if min_price is not None:
+                    products = products.filter(PricesModel.price >= min_price)
+                if min_rating is not None:
+                    products = products.filter(PricesModel.rating >= min_rating)
+                products = products.distinct()
+            return products.all()
 
 '''
 Get request to get a certain products information

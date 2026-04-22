@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
 import "../Pages/ProductPerSite.css"
 
-export function CommentsAndFields() {
+export function CommentsAndFields({onCommentAdd}) {
     const { id } = useParams()
     const { user, isSignedIn } = useUser()
     const [ loading, setLoading ] = useState(true)
@@ -61,6 +61,9 @@ export function CommentsAndFields() {
             .then(newComment => {
                 setCommentList(prev => [newComment, ...prev])
                 setInputText('')
+                if(onCommentAdd) {
+                    onCommentAdd()
+                }
             })
             .catch(error => {
                 console.error('Could not add comment: ', error)

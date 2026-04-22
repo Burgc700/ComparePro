@@ -19,33 +19,17 @@ class CommentService:
 
         #If there is no product error returns saying there is no product with that id
         if not product:
-            print("No product found for id:", product_id)
+            print("No product found:", product_id)
+            return []
+        
+        #Checks to make sure the current product also has comments
+        current_products_comments = CommentsModel.query.filter_by(product_id=product_id).first()
+        if not current_products_comments:
+            print("Current product has no comments, can't be compared")
             return []
 
         #The current product that is being viewed.
         category = product.category
-        print("Current product:", product.id, product.name, "category:", repr(category))
-
-        #Gets all the comments in the database.
-        all_comments = CommentsModel.query.all()
-        print("All comments in database:")
-        for c in all_comments:
-            print(
-                "comment_id:", c.id,
-                "| product_id:", c.product_id,
-                "| field:", repr(c.field),
-                "| text:", repr(c.text)
-            )
-
-        #Finds all products in the database with the same category
-        all_products = ProductsModel.query.all()
-        print("All products in database:")
-        for p in all_products:
-            print(
-                "product_id:", p.id,
-                "| name:", repr(p.name),
-                "| category:", repr(p.category)
-            )
 
         #Pairs all comments with the product and checks to see if that product ids category matches the currently viewed products category.
         results = (

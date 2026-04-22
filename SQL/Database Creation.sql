@@ -637,3 +637,14 @@ SELECT * FROM Users.User_comments
 SELECT * FROM Users.Recommendations
 
 SELECT * FROM Users.Likes
+
+--GPU highest 4600 lowest 69
+--CPU highest 11500 lowest 153
+--RAM highest 405 lowest 69
+--SSD highest 1000 lowest 94
+SELECT Products.Product_id, Products.Product_Category, Price.Price
+FROM Products.Price
+INNER JOIN Products.Products
+    ON Price.Product_id = Products.Product_id
+WHERE Products.Product_Category = 'GPU'
+ORDER BY Price.Price ASC

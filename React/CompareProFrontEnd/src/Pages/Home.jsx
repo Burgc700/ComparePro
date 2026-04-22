@@ -6,8 +6,12 @@ export function Home() {
  
     return (
         <>
-            <Recommendations/>
-            <AllProducts/>
+            <div className="Layout">
+                <div className="Content">
+                    <Recommendations/>
+                    <AllProducts/>
+                </div>
+            </div>
         </>
     )
 }

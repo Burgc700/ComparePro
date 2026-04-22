@@ -11,6 +11,7 @@ import "../Components/Navbar.css"
 export function ProductPerSite() {
     const { id } = useParams()
     const { user, isSignedIn } = useUser()
+    const [refreshCompareList, setRefreshCompareList] = useState(0)
 
     useEffect(() => {
         if(user && isSignedIn) {
@@ -22,15 +23,19 @@ export function ProductPerSite() {
         }
     },[id, isSignedIn, user])
 
+    function HandleAddNewComment() {
+        setRefreshCompareList(prev => prev + 1)
+    }
+
     return (
         <>
             <IndividualProductInfo/>
 
-            <CompareProducts/>
+            <CompareProducts refreshList={refreshCompareList}/>
                         
             <PriceComparison/>
            
-            <CommentsAndFields/>
+            <CommentsAndFields onCommentAdd={HandleAddNewComment}/>
         </>
     )
 }
