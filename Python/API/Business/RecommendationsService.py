@@ -3,6 +3,7 @@ Imports needed for this file.
 '''   
 from extensions import db
 from Models.Models import RecommendationModel, ProductsModel
+from datetime import datetime, timedelta
 
 '''
 Class that helps with the api requests for operations dealing with recommendations.
@@ -13,9 +14,17 @@ class RecommendationsService:
     '''
     @staticmethod
     def get_recommended_for_user(user_id):
-        #Checks the view history to see what products have been viewed.
-        view_history = RecommendationModel.query.filter_by(user_id=user_id).all()
-        ids_viewed = [product.product_id for product in view_history]
+        #Sets the start and end of the day.
+        start_time = datetime.now().replace(hour=0, minute=0, second=0)
+        end_time = start_time + timedelta(days=1)
+        #Filters the recommendations based on the user and the time of the day we are in.
+        views =  RecommendationModel.query.filter(
+            RecommendationModel.user_id == user_id,
+            RecommendationModel.viewed_at >= start_time,
+            RecommendationModel.viewed_at < end_time
+        ).all()
+        #Removes duplicated products that have been viewed for that day.
+        ids_viewed = list({product.product_id for product in views})
         #If not products have been viewed a empty array is returned.
         if not ids_viewed:
             return []

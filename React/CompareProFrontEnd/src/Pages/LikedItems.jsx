@@ -52,9 +52,6 @@ const LikedItems = () => {
                             <p>{product.brand}</p>
                             <p>{product.model_num}</p>
                             <p>{product.category}</p>
-                            <ul className="featuresList">
-                                <li>{product.features}</li>
-                            </ul>
                         </Link>
                         <Likes product={product} />
                     </div>

@@ -1,20 +1,25 @@
 import './SignInSignUp.css'
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
+import Logo from '../assets/Logo2.0.jpg'
+import { SlideShow } from '../Components/LandingSlideShow';
+
 
 function SignInSignUp() {
   return (
     <>
       <header className='Header'>
         <div className='topComps'>
-          <h1 className='name'>ComparePro</h1>
-          <h3 className='purpose'>To Compare and contrast all your computer hardware needs</h3>
+          <div className="img">
+            <img className="img" src={Logo} alt="Logo"></img>
+          </div>
+          <div className="headerText">
+            <h1 className='name'>ComparePro</h1>
+            <h3 className='purpose'>To Compare and contrast all your computer hardware needs</h3>
+          </div>
         </div>
       </header>
 
-      <div className='Pictures'>
-        <h5>This is where pictures will go for website that scroll through</h5>
-        <h5>Captions of some sort per picture.</h5>
-      </div>
+      <SlideShow></SlideShow>
 
       <footer className='Footer'>
         <div className='bottomComps'>
@@ -30,7 +35,18 @@ function SignInSignUp() {
             </div>
           </SignedOut>
           <SignedIn>
-            <UserButton />
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: {
+                    width: "45px",
+                    height: "45px",
+                    // backgroundColor: "#2F5E86"
+                    border: "2px solid #2F5E86"
+                  }
+                }
+              }}
+            />
           </SignedIn>
         </div>
       </footer>

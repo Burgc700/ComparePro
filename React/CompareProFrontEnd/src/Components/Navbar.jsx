@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { UserButton } from '@clerk/clerk-react'
 import "./Navbar.css"
+import Logo from '../assets/Logo2.0.jpg'
 
 export function Navbar() {
     const [searchText, setSearchText] = useState('')
@@ -18,6 +19,7 @@ export function Navbar() {
         <>
             <div className="header">
                 <nav className="nav">
+                    <img className="logoPic" src={Logo} alt="Logo"></img>
                     <button className="navBtn">
                         <Link to="/Home">Home</Link>
                     </button>

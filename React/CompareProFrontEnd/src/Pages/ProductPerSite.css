@@ -34,8 +34,12 @@
 .commentsContainer {
     border: 0.125rem solid #00C2FF;
     border-radius: 0.5rem;
-    margin-top: 0.3125rem;
-    width: 100%;
+
+    width: min(80%, 50rem);   /* 🔥 controls width */
+    margin: 1rem auto;        /* centers it */
+
+    padding: 1rem;
+
     overflow-wrap: break-word;
 }
 

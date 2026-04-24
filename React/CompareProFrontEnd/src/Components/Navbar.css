@@ -52,3 +52,22 @@
 .filterBtn {
     color: #f9f9f9;
 }
+
+.logoPic {
+    height: 7rem;
+    width: 12rem;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.Landingpic {
+    height: 15rem;
+    width: 25rem;
+}
