@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import Likes from '../Components/Likes'
 import "../Pages/CompareProducts.css"
 
@@ -46,12 +46,19 @@ export function CompareProductsImageCard() {
 
                 <div className="compareGrid">
                     <div className="compareColumn">
-                        <img src={originalProduct.image} alt={originalProduct.name} style={{maxWidth: "100%"}}/>   
+                        <img src={originalProduct.image} alt={originalProduct.name} style={{maxWidth: "100%"}}/>
+                        <Link to={`/product/${originalID}`} className="productLink">
+                            <button className="GoToProduct">Go to product</button>
+                        </Link>   
                         <Likes product={originalProduct} />
+                        
                     </div>                  
                 
                     <div className="compareColumn">
                         <img src={compareProduct.image} alt={compareProduct.name} style={{maxWidth: "100%"}}/>
+                        <Link to={`/product/${comparedID}`} className="ProductLink">
+                            <button className="GoToProduct">Go to product</button>
+                        </Link>
                         <Likes product={compareProduct} />  
                     </div>
                 </div>

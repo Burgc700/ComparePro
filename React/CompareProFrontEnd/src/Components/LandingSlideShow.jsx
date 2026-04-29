@@ -25,7 +25,9 @@ export function SlideShow() {
     return (
         <>
             <div className="Pictures">
-                <img className="slideNumber" src={screenshots[currImage]} alt="ComparePro preview"/>
+                <div className="imageWrapper">
+                    <img className="slideNumber" src={screenshots[currImage]} alt="ComparePro preview"/>
+                </div>
                 <h5>{captions[currImage]}</h5>
             </div>
         </>

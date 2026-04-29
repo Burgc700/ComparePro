@@ -44,15 +44,15 @@
 }
 
 .Pictures {
-    height: 60vh;   
+    height: 60vh;
     margin: 0 auto;
-
+    overflow: hidden;
     padding: clamp(1rem, 3vw, 2rem);
+    box-sizing: border-box;
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 
     border-left: 0.125rem solid #00C2FF;
     border-right: 0.125rem solid #00C2FF;
@@ -60,16 +60,28 @@
     text-align: center;
 }
 
-.slideNumber {
+.imageWrapper {
     width: 100%;
     height: 85%;
-    object-fit: contain;  
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideNumber {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
 .Pictures h5 {
-    margin-top: 1rem;
+    margin: 1rem 0 0;
     font-size: clamp(0.9rem, 1.2vw, 1.1rem);
-    height: 2rem;  
 }
 
 .bottomComps {

@@ -4,6 +4,7 @@ Imports needed for this file.
 from extensions import db
 from Models.Models import RecommendationModel, ProductsModel
 from datetime import datetime, timedelta
+from sqlalchemy.sql.expression import func
 
 '''
 Class that helps with the api requests for operations dealing with recommendations.
@@ -27,7 +28,7 @@ class RecommendationsService:
         ids_viewed = list({product.product_id for product in views})
         #If not products have been viewed a empty array is returned.
         if not ids_viewed:
-            return []
+            return ProductsModel.query.order_by(func.newid()).limit(6).all()
         
         #For products that have been viewed it gets those and determines how many of each brand and category have been viewed.
         products_viewed = ProductsModel.query.filter(ProductsModel.id.in_(ids_viewed)).all()

@@ -97,11 +97,20 @@ export function CommentsAndFields({onCommentAdd}) {
             
                 <div className="commentsContainer">
                     <ul className="list">
-                        {commentList.map((comment) => (
+                        {/* {commentList.map((comment) => (
                             <li key={comment.id}>
                                 <p><strong>{comment.field}</strong> {comment.text}</p>
                             </li>
-                        ))}
+                        ))} */}
+                        {[...commentList]
+                            .sort((a, b) => (a.field || "General").localeCompare(b.field || "General"))
+                            .map((comment) => (
+                                <li key={comment.id}>
+                                    <p>
+                                        <strong>{comment.field || "General"}</strong> {comment.text}
+                                    </p>
+                                </li>
+                            ))}
                     </ul>
                 </div>
             </div>

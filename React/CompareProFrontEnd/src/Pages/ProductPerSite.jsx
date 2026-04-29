@@ -12,6 +12,8 @@ export function ProductPerSite() {
     const { id } = useParams()
     const { user, isSignedIn } = useUser()
     const [refreshCompareList, setRefreshCompareList] = useState(0)
+    const [product, setProduct] = useState(null)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         if(user && isSignedIn) {
@@ -23,17 +25,30 @@ export function ProductPerSite() {
         }
     },[id, isSignedIn, user])
 
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/products/ID/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                setProduct(data)
+                setLoading(false)
+            })
+    }, [id])
+
+    if(loading) {
+        return <div>Loading...</div>
+    }
+    
     function HandleAddNewComment() {
         setRefreshCompareList(prev => prev + 1)
     }
 
     return (
         <>
-            <IndividualProductInfo/>
+            <IndividualProductInfo product={product}/>
 
             <CompareProducts refreshList={refreshCompareList}/>
                         
-            <PriceComparison/>
+            <PriceComparison productName={product.name}/>
            
             <CommentsAndFields onCommentAdd={HandleAddNewComment}/>
         </>

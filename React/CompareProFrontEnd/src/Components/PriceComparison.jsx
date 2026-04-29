@@ -1,10 +1,9 @@
-import { useState, useEffect, use } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import "../Pages/ProductPerSite.css"
 
 
-export function PriceComparison() {
+export function PriceComparison({productName}) {
     const { id } = useParams()
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState(null)
@@ -37,8 +36,8 @@ export function PriceComparison() {
     return (
         <>
             <h2 className="subheader">Comparison between sites</h2>
+            <h3 className="priceName">Prices for: <br/> {productName}</h3>
             <div className="priceComparison">
-
                 {prices.map((prices, index) => (
                     <div key={index} className="priceComp">
                         <h3><strong>{prices.store}</strong></h3>

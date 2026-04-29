@@ -3,33 +3,7 @@ import { useParams } from "react-router-dom"
 import Likes from '../Components/Likes'
 import "../Pages/ProductPerSite.css"
 
-export function IndividualProductInfo() {
-    const { id } = useParams()
-    const [ product, setProduct ] = useState(null)
-    const [ loading, setLoading ] = useState(true)
-    const [ error, setError ] = useState(null)
-
-    useEffect(() => {
-            setLoading(true)
-            setError(null)
-            fetch(`http://localhost:5000/api/products/ID/${id}`)
-                .then(response => response.json())
-                .then(data => {
-                    setProduct(data)
-                    setLoading(false)
-                })
-                .catch(error => {
-                    setError(error.message)
-                    setLoading(false)
-                })
-     }, [id])
-
-     if (loading) {
-        return <div>Loading products...</div>
-    }
-    if (error) {
-        return <div>Error: {error}</div>
-    }
+export function IndividualProductInfo({product}) {
     if (!product) {
         return <div>Product not found</div>
     }
