@@ -1,9 +1,13 @@
+//Imports needed to help render the items on the UI.
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import "../Pages/CompareProducts.css"
 
+//Function to create the table on the compare page between products.
 export function CompareTable() {
+    //Parameters used for the two products being compared. original is the one just being viewed and compared is the product selected in the drop down box.
     const { originalID, comparedID } = useParams()
+    //Hooks used to set the data in the right place for the UI.
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState(null)
     const [ originalProduct, setOriginalProduct ] = useState(null)
@@ -16,6 +20,7 @@ export function CompareTable() {
     useEffect(() => {
         setLoading(true)
         setError(null)
+        //Gets all the data for the products being compared for the items we need in the table.
         Promise.all([
             fetch(`http://localhost:5000/api/products/ID/${originalID}`).then(res => res.json()),
             fetch(`http://localhost:5000/api/products/ID/${comparedID}`).then(res => res.json()),
@@ -25,6 +30,7 @@ export function CompareTable() {
             fetch(`http://localhost:5000/api/prices/${comparedID}`).then(res => res.json()),
 
         ])
+        //Sets all the data in the table based off what was fetched.
         .then(([originalProductData, compareProductData, originalCommentsData, compareCommentData, originalPriceData, comparePriceData]) => {
             setOriginalProduct(originalProductData)
             setCompareProduct(compareProductData)
@@ -41,13 +47,17 @@ export function CompareTable() {
         })
     }, [originalID, comparedID])
 
+    //Returns when the table is loading on the display.
     if(loading) {
         return <div>Loading table</div>
     }
+
+    //Returns an error with the message if an error occurs.
     if(error) {
         return <div>{error}</div>
     }
 
+    //How the components are displayed on the screen and the order.
     return (
         <>
              <div className="compareTable">

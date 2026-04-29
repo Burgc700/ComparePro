@@ -1,17 +1,23 @@
+//Imports used to help render the component.
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
 import Likes from '../Components/Likes'
 import "../Pages/Home.css"
 
+//Function that gets the recommended products for that user.
 export function Recommendations() {
+    //Hooks used to help set the data on the page.
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
     const[recommendations, setRecommendations] = useState([])
+    //Parameter that helps gets the recommendation for the right user based on what they have viewed.
     const {user, isSignedIn} = useUser()
 
     useEffect(() => {
+        //Checks to make sure the user is signed in before any recommendations get returned.
         if(isSignedIn && user) {
+            //Fetches the recommendations for the user based of their user id.
             fetch(`http://localhost:5000/api/recommendations/${user.id}`)
                 .then(response => {
                     if(!response.ok) {
@@ -19,6 +25,7 @@ export function Recommendations() {
                     }
                     return response.json()
                 })
+                //Renders the recommendations on the page.
                 .then(data => {
                     setRecommendations(data)
                     setLoading(false)
@@ -34,14 +41,17 @@ export function Recommendations() {
         }
     }, [isSignedIn, user])
 
+    //Returned when recommendations are loading on the page.
     if(loading) {
         return <div>Loading all products</div>
     }
 
+    //If an error is returned the error message gets printed on the page.
     if(error) {
         return <div>Error: {error}</div>
     }
 
+    //How the components are displayed on the screen and the order.
     return (
         <>
             <h1 className="mainHeaders">Recommended for you</h1>

@@ -1,10 +1,12 @@
+//Imports used to get the clerk stuff to create the sign in sign up buttons.
 import './SignInSignUp.css'
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/clerk-react';
 import Logo from '../assets/Logo2.0.jpg'
 import { SlideShow } from '../Components/LandingSlideShow';
 
-
+//Function that renders the components for the signinsignup page.
 function SignInSignUp() {
+  //Sets all the items on the page.
   return (
     <>
       <header className='Header'>

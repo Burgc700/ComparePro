@@ -1,13 +1,17 @@
+//Imports needed to help render items on the component.
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import Likes from '../Components/Likes'
 import "../Pages/ProductPerSite.css"
 
+//Function that gets the product info for a product selected from one of the pages in the navbar.
 export function IndividualProductInfo({product}) {
+    //If that product is not found in the database the following is returned.
     if (!product) {
         return <div>Product not found</div>
     }
 
+    //How the components are displayed on the screen and the order.
     return (
         <>
             <div className="Top">

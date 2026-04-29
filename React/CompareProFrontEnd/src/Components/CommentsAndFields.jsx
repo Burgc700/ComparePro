@@ -1,12 +1,17 @@
+//Imports needed to help display items.
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
 import "../Pages/ProductPerSite.css"
 
+//Function to get and set all comments and fields that the user wants to add.
 export function CommentsAndFields({onCommentAdd}) {
+    //Parameter to make sure the comment gets added to the right product id.
     const { id } = useParams()
+    //Parameter to make sure the user that is logged in gets only the comments they have posted to the products that have been commented on by them.
     const { user, isSignedIn } = useUser()
+    //Hooks to help set the data displayed is the UI.
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState(null)
     const [ inputText, setInputText ] = useState('')
@@ -18,6 +23,7 @@ export function CommentsAndFields({onCommentAdd}) {
         setCommentList([])
         setLoading(true)
         setError(null)
+        //Get request to get the comments for a certain product if that product has comments with it.
         fetch(`http://localhost:5000/api/comments/${id}`)
             .then(response => response.json())
             .then(data => { 
@@ -27,25 +33,31 @@ export function CommentsAndFields({onCommentAdd}) {
             .catch(error => console.error('Can not fetch comments: ', error))
     }, [id])
 
+    //Returns when the comments are loading.
     if(loading) {
         return <div>Comments Loading</div>
     }
 
+    //Returned if an error occurs with the message of the error.
     if(error) {
         return <div>Error: {error}</div>
     }
 
+    //Method that adds the text from the user key strokes to the text box in the UI.
     const HandleInputChange = (event) => {
         setInputText(event.target.value)
     }
 
+    //When the button is clicked the text box will be cleared and the comment and field should be displayed in the box for comments.
     const HandleButtonClick = () => {
         if(!isSignedIn){
             alert('Sign in to comment')
             return
         }
+        //Special case when the user wants to add a field to the comments that aren't already in the list.
         const finalField = selectField === "custom" ? customField : selectField
         if(inputText.trim() !== '') {
+            //Post request that sends the comment and field to the database for that user so it gets displayed the next the user views that product.
             fetch(`http://localhost:5000/api/comments/add/${id}`, {
                 method: 'POST',
                 headers: {
@@ -58,6 +70,7 @@ export function CommentsAndFields({onCommentAdd}) {
                 })
             })
             .then(response => response.json())
+            //Adds the comment to the database.
             .then(newComment => {
                 setCommentList(prev => [newComment, ...prev])
                 setInputText('')
@@ -72,6 +85,7 @@ export function CommentsAndFields({onCommentAdd}) {
         }
     }
 
+     //How the components are displayed on the screen and the order.
     return (
         <>
             <h2 className="subheader">Comments</h2>

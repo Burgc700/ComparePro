@@ -1,11 +1,15 @@
+//Imports for components and styling used for the page.
 import React, { useState, useEffect } from 'react'
 import { useUser } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom'
 import Likes from '../Components/Likes'
 import "./Home.css"
 
+//Function that defines the liked items page.
 const LikedItems = () => {
+    //Gets the user id for the user signed in so the liked items that show up in the page that the user has liked.
     const { user, isSignedIn } = useUser()
+    //Hooks that set the items in the page.
     const [ likedProducts, setLikedProducts ] = useState([])
     const [ loading, setLoading ] = useState(true)
 
@@ -15,6 +19,7 @@ const LikedItems = () => {
                 setLoading(false)
                 return
             }
+            //Gets the items liked by the user and the product cards for the products.
             try {
                 const likeResponse = await fetch(`http://localhost:5000/api/liked/${user.id}`)
                 const likedIds = await likeResponse.json()
@@ -33,13 +38,17 @@ const LikedItems = () => {
         fetchLikes();
     }, [isSignedIn, user])
 
+    //Makes sure the user is logged in.
     if(!isSignedIn) {
         return("Must sign in to view liked items")
     }
+
+    //Returns when the items are loading.
     if(loading) {
         <h1>Loading Liked items</h1>
     }
 
+    //The items in the order that the are being displayed on the page.
     return(
         <>
             <h1 className='mainHeaders'>Liked Items</h1>

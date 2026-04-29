@@ -1,14 +1,18 @@
+//Imports needed to display the items.
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import Likes from '../Components/Likes'
 import "../Pages/Home.css"
 
+//Function that returns each product in a card format for viewing.
 export function AllProducts() {
+    //Hooks to set the items.
     const [Products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
     useEffect(() => {
+        //Fetches all the product information from the database.
         fetch('http://localhost:5000/api/products')
             .then(response => {
                 if(!response.ok) {
@@ -16,6 +20,7 @@ export function AllProducts() {
                 }
                 return response.json()
             })
+            //Sets the products to display in a random order.
             .then(data => {
                 const shuffledProducts = data.sort(() => Math.random() - 0.5)
                 setProducts(shuffledProducts)
@@ -27,14 +32,17 @@ export function AllProducts() {
             })
     }, [])
 
+    //If the cards are loading this is on the display.
     if(loading) {
         return <div>Loading all products</div>
     }
 
+    //If an error occurs the error is printed for the user.
     if(error) {
         return <div>Error: {error}</div>
     }
 
+    //HTMl to format and add the products cards to the page.
     return (
         <>
             <h1 className="mainHeaders">All Products</h1>

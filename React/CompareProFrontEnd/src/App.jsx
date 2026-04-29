@@ -1,3 +1,4 @@
+//Imports for paths to other pages.
 import { BrowserRouter as Router, Routes, Route} from "react-router-dom"
 import { Landing } from "./Pages/Landing"
 import { Home } from "./Pages/Home"
@@ -10,8 +11,9 @@ import LikedItems from "./Pages/LikedItems"
 import './App.css'
 import { CategoryProducts } from "./Components/CategoryProducts"
 
+//Function that holds all the routes to other pages.
 export default function App() {
-
+  //The routes to all other paths or the website.
   return (
     <Router>
       <Routes>
