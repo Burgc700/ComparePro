@@ -12,8 +12,13 @@
 }
 
 .navBtn {
-    margin: 0.3125rem;
-    max-width: 300px;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f9f9f9;    
 }
 
 .searchBar {
@@ -22,5 +27,47 @@
 
 .searchBtn {
     margin: 0.3125rem;
-    color: #00C2FF;
+    color: #f9f9f9;
+}
+
+.VerticalNavBar {
+    width: 15rem;             
+    min-height: 100vh;         
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-right: 0.125rem solid #00C2FF;
+    border-top: 0.125rem solid #00C2FF;
+    background-color: #f9f9f9;   
+    position: sticky;
+    top: 0;
+    margin-top: 8rem;
+}
+
+.filterBtn:hover {
+    opacity: 0.9;
+}
+
+.filterBtn {
+    color: #f9f9f9;
+}
+
+.logoPic {
+    height: 7rem;
+    width: 12rem;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.Landingpic {
+    height: 15rem;
+    width: 25rem;
 }

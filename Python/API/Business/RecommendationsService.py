@@ -1,26 +1,54 @@
+'''
+Imports needed for this file.
+'''   
 from extensions import db
 from Models.Models import RecommendationModel, ProductsModel
+from datetime import datetime, timedelta
+from sqlalchemy.sql.expression import func
 
+'''
+Class that helps with the api requests for operations dealing with recommendations.
+'''
 class RecommendationsService:
+    '''
+    Method to find recommendations to display to the user.
+    '''
     @staticmethod
     def get_recommended_for_user(user_id):
-        view_history = RecommendationModel.query.filter_by(user_id=user_id).all()
-        ids_viewed = [product.product_id for product in view_history]
+        #Sets the start and end of the day.
+        start_time = datetime.now().replace(hour=0, minute=0, second=0)
+        end_time = start_time + timedelta(days=1)
+        #Filters the recommendations based on the user and the time of the day we are in.
+        views =  RecommendationModel.query.filter(
+            RecommendationModel.user_id == user_id,
+            RecommendationModel.viewed_at >= start_time,
+            RecommendationModel.viewed_at < end_time
+        ).all()
+        #Removes duplicated products that have been viewed for that day.
+        ids_viewed = list({product.product_id for product in views})
+        #If not products have been viewed a empty array is returned.
         if not ids_viewed:
-            return []
+            return ProductsModel.query.order_by(func.newid()).limit(6).all()
         
+        #For products that have been viewed it gets those and determines how many of each brand and category have been viewed.
         products_viewed = ProductsModel.query.filter(ProductsModel.id.in_(ids_viewed)).all()
         category = {cat.category for cat in products_viewed}
         brand = {b.brand for b in products_viewed}
 
+        #Returns the top 6 recommendations based off what the view history looks like.
         return ProductsModel.query.filter(
             ProductsModel.category.in_(category),
             ProductsModel.brand.in_(brand),
             ~ProductsModel.id.in_(ids_viewed)
         ).limit(6).all()
     
+    '''
+    Method to track a product that has been viewed by clicking on that product card.
+    '''
     @staticmethod
     def track_view(user_id, product_id):
+        #Sets the product as viewed based on userid and the productid
         viewed = RecommendationModel(user_id=user_id, product_id=product_id)
+        #Adds the product to the database as that user has viewed that product.
         db.session.add(viewed)
         db.session.commit()

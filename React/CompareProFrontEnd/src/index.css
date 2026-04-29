@@ -43,7 +43,7 @@ img {
 
 a {
   font-weight: 500;
-  color: #00C2FF;
+  color: #f9f9f9;
   text-decoration: none;
 }
 
@@ -54,7 +54,7 @@ a:hover {
 h1 {
   font-size: clamp(2rem, 4vw, 3.2rem);
   line-height: 1.1;
-  color: #001F3F;
+  color: #2F5E86 ;
   margin: 0;
 }
 
@@ -65,13 +65,14 @@ button {
   font-size: 1rem;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #2F5E86; 
   cursor: pointer;
   transition: border-color 0.25s;
 }
 
 button:hover {
-  border-color: #646cff;
+  /* border-color: #646cff; */
+  opacity: 0.9;
 }
 
 button:focus,
@@ -81,15 +82,17 @@ button:focus-visible {
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    color: #2F5E86;
+    background-color: #f9f9f9;
   }
 
   a:hover {
-    color: #747bff;
+    /* color: #747bff; */
+    opacity: 0.9;
   }
 
   button {
     background-color: #f9f9f9;
+    color: #2F5E86;
   }
 }

@@ -4,12 +4,15 @@
     margin: 1.25rem 0;
 }
 
-.AllProducts {
-    padding: 1.25rem;
-    display: grid;
-    max-width: 87.5rem;
+.InnerContent {
     width: 100%;
     margin: 0 auto;
+}
+
+.AllProducts {
+    padding: 1.25rem 0;
+    display: grid;
+    width: 100%;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
     gap: 1.25rem;
 }
@@ -38,4 +41,15 @@
     object-fit: contain;
     display: block;
     margin: 0 auto 1rem;
+}
+
+.Layout {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.Content {
+    flex: 1;
+    padding: 1.25rem;
 }

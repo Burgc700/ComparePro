@@ -1,19 +1,111 @@
+.Header,
+.Footer {
+    display: flex;
+    justify-content: center;
+}
+
 .Header {
-    padding-bottom: 600px;
+    padding-bottom: 0;
+}
+
+.topComps,
+.bottomComps,
+.Pictures {
+    width: min(85vw, 75rem);
+    box-sizing: border-box;   
 }
 
 .topComps {
-    border: 2px solid white;
-    padding: 30px;
+    border: 0.125rem solid #00C2FF; 
+
+    padding: clamp(1.5rem, 3vw, 3rem);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(2rem, 5vw, 5rem);
 }
 
-.bottomComps {
-    border: 2px solid white;
-    padding: 30px;
+.img {
+    height: clamp(9rem, 18vw, 18rem);
+    width: auto;
+}
+
+.name {
+    font-size: clamp(3rem, 6vw, 6rem);
+    color: #2F5E86;
+}
+
+.purpose {
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    text-align: center;
+    max-width: 42rem;
 }
 
 .Pictures {
+    height: 60vh;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: clamp(1rem, 3vw, 2rem);
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border-left: 0.125rem solid #00C2FF;
+    border-right: 0.125rem solid #00C2FF;
+
     text-align: center;
-    margin-bottom: 30px;
-    
+}
+
+.imageWrapper {
+    width: 100%;
+    height: 85%;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slideNumber {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.Pictures h5 {
+    margin: 1rem 0 0;
+    font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+}
+
+.bottomComps {
+    border: 0.125rem solid #00C2FF; 
+
+    padding: clamp(1.5rem, 3vw, 3rem);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.authBtn {
+    color: #f9f9f9;
+    background-color: #001F3F;
+    border: none;
+    padding: 0.75em 1.5em;
+    border-radius: 0.5rem;
+    font-size: clamp(1rem, 1.5vw, 1.3rem);
+    cursor: pointer;
+    margin: 0.5rem;
+}
+
+.authBtn:hover {
+    opacity: 0.9;
 }

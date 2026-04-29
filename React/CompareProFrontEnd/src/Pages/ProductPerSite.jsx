@@ -1,150 +1,66 @@
+//Imports for components and styling used for the page. Also other imports to help render the page.
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { useUser } from "@clerk/clerk-react"
-import Likes from '../Components/Likes'
+import { PriceComparison } from "../Components/PriceComparison"
+import { IndividualProductInfo } from "../Components/IndividualProductInfo"
+import { CommentsAndFields } from "../Components/CommentsAndFields"
+import { CompareProducts } from "../Components/CompareProducts"
 import "./ProductPerSite.css"
 import "../Components/Navbar.css"
 
+//Function for the page that loads all products for a certain category from the navbar.
 export function ProductPerSite() {
+    //Parameter to get the right id of the product the user wants to look at.
     const { id } = useParams()
+    //Gets the user that is currently logged in to track which products have been viewed for the recommendations.
     const { user, isSignedIn } = useUser()
-    const [ product, setProduct ] = useState(null)
-    const [ loading, setLoading ] = useState(true)
-    const [ error, setError ] = useState(null)
-    const [ prices, setPrices ] = useState([])
-    const [ inputText, setInputText ] = useState('')
-    const [ commentList, setCommentList ] = useState([])
+    //Hooks used to set the the data that is being displayed on the page.
+    const [refreshCompareList, setRefreshCompareList] = useState(0)
+    const [product, setProduct] = useState(null)
+    const [loading, setLoading] = useState(true)
 
+    //Effect that sends a post request to the database when a user views a product.
     useEffect(() => {
-        setCommentList([])
-        setLoading(true)
-        fetch(`http://localhost:5000/api/products/ID/${id}`)
-            .then(response => response.json())
-            .then(data => {
-                setProduct(data)
-                setLoading(false)
-            })
-            .catch(error => {
-                setError(error.message)
-                setLoading(false)
-            })
-
-        fetch(`http://localhost:5000/api/prices/${id}`)
-            .then(response => response.json())
-            .then(data => setPrices(data))
-            .catch(error => console.error('Price fetch error: ', error))
-
-        fetch(`http://localhost:5000/api/comments/${id}`)
-            .then(response => response.json())
-            .then(data => setCommentList(data))
-            .catch(error => console.error('Can not fetch comments: ', error))
-    }, [id])
-
-    useEffect(() => {
-        if(product && isSignedIn) {
+        if(user && isSignedIn) {
             fetch(`http://localhost:5000/api/track-view/${id}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({user_id: user.id})
             })
         }
-    },[product, id, isSignedIn, user])
+    },[id, isSignedIn, user])
 
-    if (loading) {
-        return <div>Loading products...</div>
-    }
-    if (error) {
-        return <div>Error: {error}</div>
-    }
-    if (!product) {
-        return <div>Product not found</div>
-    }
-
-    const HandleInputChange = (event) => {
-        setInputText(event.target.value)
-    }
-
-    const HandleButtonClick = () => {
-        if(!isSignedIn){
-            alert('Sign in to comment')
-            return
-        }
-        if(inputText.trim() !== '') {
-            fetch(`http://localhost:5000/api/comments/add/${id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    user_id: user.id,
-                    text: inputText
-                })
+    //Get request that gets the product info for the category tab that has been selected.
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/products/ID/${id}`)
+            .then(res => res.json())
+            .then(data => {
+                setProduct(data)
+                setLoading(false)
             })
-            .then(response => response.json())
-            .then(newComment => {
-                setCommentList(prev => [newComment, ...prev])
-                setInputText('')
-            })
-            .catch(error => {
-                console.error('Could not add comment: ', error)
-                alert('Failed to add comment')
-            })
-        }
+    }, [id])
+
+    //Returns when the page is loading.
+    if(loading) {
+        return <div>Loading...</div>
+    }
+    
+    //Helper method that refreshes the comment list when a comment is added to that product page.
+    function HandleAddNewComment() {
+        setRefreshCompareList(prev => prev + 1)
     }
 
+    //Returns the full page based on the components added to render the page.
     return (
         <>
-            <div className="Top">
-                <h1 className="mainHeaders">{product.name}</h1>
-            </div>
-            <div className='ProductImg'>
-                <img src={product.image} style={{ maxWidth: '100%' }}></img>
-            </div>
-            <div className="ProductInfo">
-                <h5>Brand: {product.brand}</h5>
-                <h5>Category: {product.category}</h5>
-                <h5>Model Number: {product.model_num}</h5>
-                <div className='featuresContainer'>
-                    <ul className="featuresList">
-                        {product.features
-                            ?.split("|")
-                            .map((features, i) => (
-                                <li key={i}>{features.trim()}</li>
-                            ))}
-                    </ul> 
-                </div>
-            </div>
-            <Likes product={product} />
+            <IndividualProductInfo product={product}/>
 
-            <h2>Comparison between sites</h2>
-            <div className="priceComparison">
-
-                {prices.map((prices, index) => (
-                    <div key={index} className="priceComp">
-                        <h3><strong>{prices.store}</strong></h3>
-                        <p>{prices.price}</p>
-                        <p>{prices.rating}</p>
-                        <a href={prices.url} target="_blank" rel="noopener noreferrer">
-                            <button className="websiteBtn">View product from {prices.store}</button>
-                        </a>
-                    </div>
-                ))}
-            </div>
-            <h2>Comments</h2>
-            <div className="commentBox">
-                <label className="searchBar" htmlFor="comments">Comments </label>
-                <input className="comments" type="text" value={inputText} onChange={HandleInputChange}/>
-                <button className="searchBtn" onClick={HandleButtonClick}>Add Comment</button>
-                <div className="commentsContainer">
-                    <ul className="list">
-                        {commentList.map((comment) => (
-                            <li key={comment.id}>
-                                <p>{comment.text}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
+            <CompareProducts refreshList={refreshCompareList}/>
+                        
+            <PriceComparison productName={product.name}/>
+           
+            <CommentsAndFields onCommentAdd={HandleAddNewComment}/>
         </>
     )
 }

@@ -1,6 +1,12 @@
+'''
+Imports needed for the file.
+'''
 from extensions import db
 from sqlalchemy import Numeric
 
+'''
+All the information that the database has that deals with the products table.
+'''
 class ProductsModel(db.Model):
     __tablename__ = 'Products'
     __table_args__ = {'schema': 'Products'}
@@ -14,7 +20,10 @@ class ProductsModel(db.Model):
 
     def __repr__(self):
         return f"Product name: {self.name}, Brand: {self.brand}, Model_num: {self.model_num} Category: {self.category}, Image URL: {self.image}, features: {self.features})"
-    
+
+'''
+All the information that the database has that deals with the likes table.
+'''   
 class LikesModel(db.Model):
     __tablename__ = "Likes"
     __table_args__ = (db.UniqueConstraint('User_id', 'Product_id', name='UQ_User_Product'),
@@ -26,7 +35,10 @@ class LikesModel(db.Model):
 
     def __repr__(self):
         return(f"Like_id: {self.id}, by {self.user_id}, Product: {self.product_id} at {self.created_at}")
-    
+
+'''
+All the information that the database has that deals with the recommendations table.
+'''   
 class RecommendationModel(db.Model):
     __tablename__ = 'Recommendations'
     __table_args__ = {'schema': 'Users'}
@@ -40,6 +52,9 @@ class RecommendationModel(db.Model):
     
     #reqparse stuff if need
 
+'''
+All the information that the database has that deals with the price table.
+'''
 class PricesModel(db.Model):
     __tablename__ = 'Price'
     __table_args__ = {'schema': 'Products'}
@@ -52,15 +67,19 @@ class PricesModel(db.Model):
 
     def __repr__(self):
         return f"Product id: {self.product_id}, store: {self.store}, price: {self.price} Rating: {self.rating}, URL: {self.url})"
-    
+
+'''
+All the information that the database has that deals with the comments table.
+'''
 class CommentsModel(db.Model):
     __tablename__ = 'User_Comments'
     __table_args__ = {'schema': 'Users'}
     id = db.Column('Comment_id', db.Integer, primary_key = True)
     product_id = db.Column('Product_id', db.Integer, db.ForeignKey('Products.Products.Product_id'), nullable=False)
     user_id = db.Column('User_id', db.String(100), nullable = False)
+    field = db.Column('Comment_field', db.String(50), nullable = True)
     text = db.Column('Text', db.String(1073741823), nullable = False)
     created_at = db.Column('Created_at', db.DateTime, default=db.func.now())
 
     def __repr__(self):
-        return (f"Comment id: {self.id} Product id: {self.product_id} User id: {self.user_id} Comment: {self.text}")
+        return (f"Comment id: {self.id} Product id: {self.product_id} User id: {self.user_id} Comment: {self.text} Field: {self.field}")
