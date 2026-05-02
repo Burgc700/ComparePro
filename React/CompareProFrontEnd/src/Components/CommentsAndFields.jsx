@@ -10,7 +10,7 @@ export function CommentsAndFields({onCommentAdd}) {
     //Parameter to make sure the comment gets added to the right product id.
     const { id } = useParams()
     //Parameter to make sure the user that is logged in gets only the comments they have posted to the products that have been commented on by them.
-    const { user, isSignedIn } = useUser()
+    const { user, isSignedIn, isLoaded } = useUser()
     //Hooks to help set the data displayed is the UI.
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState(null)
@@ -20,18 +20,24 @@ export function CommentsAndFields({onCommentAdd}) {
     const [ customField, setCustomField ] = useState("")
 
     useEffect(() => {
-        setCommentList([])
-        setLoading(true)
-        setError(null)
+        if (!isLoaded || !isSignedIn || !user) {
+            setCommentList([])
+            setLoading(false)
+            return
+        }
         //Get request to get the comments for a certain product if that product has comments with it.
-        fetch(`http://localhost:5000/api/comments/${id}`)
+        fetch(`http://localhost:5000/api/comments/${id}?user_id=${user.id}`)
             .then(response => response.json())
             .then(data => { 
                 setCommentList(data)
                 setLoading(false)
             })
-            .catch(error => console.error('Can not fetch comments: ', error))
-    }, [id])
+            .catch(error => {
+                console.error("Can not fetch comments: ", error)
+                setError(error.message)
+                setLoading(false)
+            })
+    }, [id, user, isSignedIn, isLoaded])
 
     //Returns when the comments are loading.
     if(loading) {

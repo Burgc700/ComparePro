@@ -61,8 +61,6 @@ Get request to get all products from a certain category of product.
 class SortProductsByCategory(Resource):
         @marshal_with(productFields)
         def get(self, category):
-            # products = ProductsModel.query.filter_by(category=category).all()
-            # return products
             min_price = request.args.get("minPrice", type=float)
             min_rating = request.args.get("minRating", type=float)
             products = ProductsModel.query.filter_by(category=category)
@@ -124,7 +122,7 @@ class GetLikedItems(Resource):
     def get(self, user_id, product_id=None):
         if product_id:
             like = LikesModel.query.filter_by(user_id=user_id, product_id=product_id).first()
-            return {"Liked": like is not None}, 200
+            return {"liked": like is not None}, 200
         else:
             likes = LikesModel.query.filter_by(user_id=user_id).all()
             likedItems = [like.product_id for like in likes]
@@ -137,6 +135,9 @@ class ToggleLikes(Resource):
     def post(self, product_id):
         parser = reqparse.RequestParser()
         parser.add_argument('user_id', type=str, required=True, location='json')
+        product = ProductsModel.query.get(product_id)
+        if not product:
+            return {"message": "Invalid product id"}, 400
         args = parser.parse_args()
         liked = LikesService.toggle_likes(args['user_id'], product_id)
         if liked:
@@ -165,15 +166,15 @@ Post request that adds that a product has been viewed by a certain user.
 '''    
 class TrackViewedProducts(Resource):
     def post(self, product_id):
-        parser = reqparse.RequestParser()
-        parser.add_argument('user_id', type=str, required=True, location='json')
-        args = parser.parse_args()
-        RecommendationsService.track_view(
-            args['user_id'],
-            product_id
-        )
+        data = request.get_json()
+        product = ProductsModel.query.get(product_id)
+        if not product:
+            return {"message": "Invalid product id"}, 400
+        if not data or not data.get("user_id"):
+            return {"message": "user_id is required"}, 400
+        user_id = data.get("user_id")
+        RecommendationsService.track_view(user_id, product_id)
         return {'message': 'View tracked'}, 201
-
 #endregion
 
 #region Prices
@@ -224,26 +225,45 @@ compareCommentFields = {
     'field': fields.String
 }
 
+#Argument for getting the right user id for comments
+user_query_args = reqparse.RequestParser()
+user_query_args.add_argument('user_id', type=str, required=True, location="args")
+
 '''
 Get request to get the comments the user has already added for a product.
 '''
 class CommentsForProduct(Resource):
     def get(self, product_id):
-        comments = CommentsModel.query.filter_by(product_id=product_id).order_by(CommentsModel.field).all()
+        args = user_query_args.parse_args()
+        product = ProductsModel.query.get(product_id)
+        if not product:
+            return {"message": "Invalid product id"}, 400
+        user_id = args["user_id"]
+
+        comments = CommentsModel.query.filter_by(
+            product_id=product_id,
+            user_id=user_id
+        ).order_by(CommentsModel.field).all()
+
         return marshal(comments, commentFields), 200
 
 '''
 Post request that sends the data thats in the comment to be added to the database.
 '''    
 class AddComment(Resource):
-    @marshal_with(commentFields)
+    #@marshal_with(commentFields)
     def post(self, product_id):
         args = comment_args.parse_args()
+        product = ProductsModel.query.get(product_id)
+        if not product:
+            return {"message": "Invalid product id"}, 401
+        if not args["text"] or args["text"].strip() == "":
+            return {"message": "Comment text cannot be empty"}, 400
         comment = CommentsModel(product_id=product_id, user_id=args['user_id'], text=args['text'], field=args['field'])
         db.session.add(comment)
         db.session.commit()
         db.session.refresh(comment)
-        return comment, 201
+        return marshal(comment, commentFields), 201
 
 '''
 Get request that finds other products of the same category that also have comments for the user to compare.
@@ -251,7 +271,10 @@ Get request that finds other products of the same category that also have commen
 class FindSameCategoryWithComments(Resource):
     @marshal_with(compareCommentFields)
     def get(self, product_id):
-        return CommentService.Get_other_products(product_id)
+        args = user_query_args.parse_args()
+        user_id = args["user_id"]
+
+        return CommentService.Get_other_products(product_id, user_id)
 #endregion
 
 #The endpoints for all api CRUD operations.
@@ -274,6 +297,6 @@ api.add_resource(FindSameCategoryWithComments, '/api/comments/compare/<int:produ
 def home():
     return '<h1>Test</h1>'
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=False) 
 
 print (pyodbc.drivers())

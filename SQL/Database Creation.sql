@@ -616,7 +616,7 @@ SELECT COUNT(Product_id) from Products.Products
 
 SELECT * FROM Products.Products WHERE Product_Category = 'CPU'
 
-SELECT * FROM Products.Products WHERE Product_Category = 'CPU'
+SELECT * FROM Products.Products WHERE Product_Category = 'GPU'
 
 SELECT * FROM Products.Products WHERE Product_Category = 'RAM'
 

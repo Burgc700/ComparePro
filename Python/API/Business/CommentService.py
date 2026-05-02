@@ -14,7 +14,7 @@ class CommentService:
     Product_id: The id to look up in the database to get the category of the current product.
     '''
     @staticmethod
-    def Get_other_products(product_id):
+    def Get_other_products(product_id, user_id):
         product = ProductsModel.query.get(product_id) 
 
         #If there is no product error returns saying there is no product with that id
@@ -23,7 +23,7 @@ class CommentService:
             return []
         
         #Checks to make sure the current product also has comments
-        current_products_comments = CommentsModel.query.filter_by(product_id=product_id).first()
+        current_products_comments = CommentsModel.query.filter_by(product_id=product_id, user_id=user_id).first()
         if not current_products_comments:
             print("Current product has no comments, can't be compared")
             return []
@@ -37,7 +37,8 @@ class CommentService:
             .join(ProductsModel, CommentsModel.product_id == ProductsModel.id)
             .filter(
                 func.lower(func.trim(ProductsModel.category)) == func.lower(func.trim(category)),
-                CommentsModel.product_id != product_id
+                CommentsModel.product_id != product_id,
+                CommentsModel.user_id == user_id
             )
             .all()
         )

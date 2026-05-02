@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useParams } from "react-router-dom"
+import { useUser } from "@clerk/clerk-react"
 import "../Pages/ProductPerSite.css"
 
 //Function to help find the other products of the same category that also have a comment.
@@ -9,6 +10,8 @@ import "../Pages/ProductPerSite.css"
 export function CompareProducts({refreshList}) {
     //Parameter that gets the id's of the other products that should be populated in the drop down.
     const { id } = useParams()
+    //Parameter to make sure the user that is logged in gets only the comparable products they have posted to the products that have been commented on by them.
+    const { user, isSignedIn, isLoaded } = useUser()
     //Hooks that help set the data for the page.
     const [ product, setProduct ] = useState(null)
     const [ compareComment, setCompareComment ] = useState("")
@@ -19,8 +22,12 @@ export function CompareProducts({refreshList}) {
     const navigate = useNavigate()
 
     useEffect(() => {
+        //Makes sure there is a user logged in
+        if (!isLoaded || !isSignedIn || !user) {
+            return
+        }
         //Gets all the other products  of the same category that have a comment.
-        fetch(`http://localhost:5000/api/comments/compare/${id}`)
+        fetch(`http://localhost:5000/api/comments/compare/${id}?user_id=${user.id}`)
             .then(response => response.json())
             //Helps ensure that the data getting added to the to drop down is valid.
             .then(data => {
@@ -40,7 +47,7 @@ export function CompareProducts({refreshList}) {
             })
             .catch(error => console.error("Compare comments error: ", error))
         
-    }, [id, refreshList])
+    }, [id, user, isLoaded, isSignedIn, refreshList])
 
     //When the button is clicked makes sure a product is selected and changes the page and renders the two products being compared.
     const HandleCompareClick = () => {
