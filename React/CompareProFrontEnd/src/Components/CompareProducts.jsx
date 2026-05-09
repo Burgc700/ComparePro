@@ -17,6 +17,7 @@ export function CompareProducts({refreshList}) {
     const [ compareComment, setCompareComment ] = useState("")
     const [ compareProduct, setCompareProduct ] = useState([])
     const [ selectedToCompare, setSelectedToCompare ] = useState("")
+    const API_URL = import.meta.env.VITE_API_URL
 
     //variable that navigates or changes the page to the compare page after the button is clicked.
     const navigate = useNavigate()
@@ -27,7 +28,7 @@ export function CompareProducts({refreshList}) {
             return
         }
         //Gets all the other products  of the same category that have a comment.
-        fetch(`http://localhost:5000/api/comments/compare/${id}?user_id=${user.id}`)
+        fetch(`${API_URL}/api/comments/compare/${id}?user_id=${user.id}`)
             .then(response => response.json())
             //Helps ensure that the data getting added to the to drop down is valid.
             .then(data => {

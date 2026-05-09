@@ -68,3 +68,33 @@ class CommentService:
             })
 
         return returned_products
+    
+    @staticmethod
+    def get_comments_for_products(product_id, user_id):
+        product = ProductsModel.query.get(product_id)
+        if not product:
+            return None, "Invalid product id"
+        comments = CommentsModel.query.filter_by(
+            product_id = product_id,
+            user_id = user_id
+        ).order_by(CommentsModel.field).all()
+        return comments, None
+    
+    @staticmethod
+    def add_comment(product_id, user_id, text, field):
+        product = ProductsModel.query.get(product_id)
+        comment = CommentsModel(
+            product_id = product_id,
+            user_id = user_id,
+            text = text,
+            field = field
+        )
+        if not product:
+            return None, "Invalid product id"
+        if text is None or text.strip() == "":
+            return None, "Comment text can not be empty"
+        
+        db.session.add(comment)
+        db.session.commit()
+        db.session.refresh(comment)
+        return comment, None

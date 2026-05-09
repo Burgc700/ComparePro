@@ -10,15 +10,16 @@ const Likes = ({ product, initialLiked, onToggle}) => {
     //Hooks used to help set the actions that are needed for the page.
     const [ isLiked, setIsLiked ] = useState(false)
     const [ loading, setLoading] = useState(true)
+    const API_URL = import.meta.env.VITE_API_URL
 
       useEffect(() => {
         if(isSignedIn && user?.id && product?.id) {
             //Gets the items that have been liked by the user so they show up as a liked item on the display.
-            fetch(`http://localhost:5000/api/liked/${user.id}/${product.id}`)
+            fetch(`${API_URL}/api/liked/${user.id}/${product.id}`)
                 .then(response => response.json())
                 //Sets the heart button to a red heart if the user has liked that item.
                 .then(data => {
-                    setIsLiked(data.Liked) 
+                    setIsLiked(data.liked) 
                     setLoading(false)
                 })
                 .catch(error => {
@@ -43,7 +44,7 @@ const Likes = ({ product, initialLiked, onToggle}) => {
             return
         }
         //Post request that send back and forth if the user has liked a new item or unliked a item.
-        fetch(`http://localhost:5000/api/likes/toggle/${product.id}`, {
+        fetch(`${API_URL}/api/likes/toggle/${product.id}`, {
             method: 'POST',
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify({user_id: user.id})

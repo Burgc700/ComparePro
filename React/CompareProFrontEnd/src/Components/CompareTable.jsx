@@ -1,6 +1,7 @@
 //Imports needed to help render the items on the UI.
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
+import { useUser } from "@clerk/clerk-react"
 import "../Pages/CompareProducts.css"
 
 //Function to create the table on the compare page between products.
@@ -16,18 +17,22 @@ export function CompareTable() {
     const [ compareComments, setCompareComments] = useState([])
     const [ originalPrice, setOriginalPrice ] = useState([])
     const [ comparePrice, setComparePrice ] = useState([])
+    const { user, isLoaded, isSignedIn } = useUser()
+    const API_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         setLoading(true)
         setError(null)
+        if (!isLoaded) return
+        if (!isSignedIn || !user) return
         //Gets all the data for the products being compared for the items we need in the table.
         Promise.all([
-            fetch(`http://localhost:5000/api/products/ID/${originalID}`).then(res => res.json()),
-            fetch(`http://localhost:5000/api/products/ID/${comparedID}`).then(res => res.json()),
-            fetch(`http://localhost:5000/api/comments/${originalID}`).then(res => res.json()),
-            fetch(`http://localhost:5000/api/comments/${comparedID}`).then(res => res.json()),
-            fetch(`http://localhost:5000/api/prices/${originalID}`).then(res => res.json()),
-            fetch(`http://localhost:5000/api/prices/${comparedID}`).then(res => res.json()),
+            fetch(`${API_URL}/api/products/ID/${originalID}`).then(res => res.json()),
+            fetch(`${API_URL}/api/products/ID/${comparedID}`).then(res => res.json()),
+            fetch(`${API_URL}/api/comments/${originalID}?user_id=${user.id}`).then(res => res.json()),
+            fetch(`${API_URL}/api/comments/${comparedID}?user_id=${user.id}`).then(res => res.json()),
+            fetch(`${API_URL}/api/prices/${originalID}`).then(res => res.json()),
+            fetch(`${API_URL}/api/prices/${comparedID}`).then(res => res.json()),
 
         ])
         //Sets all the data in the table based off what was fetched.
@@ -45,7 +50,7 @@ export function CompareTable() {
             setError("Could not load comparison")
             setLoading(false)
         })
-    }, [originalID, comparedID])
+    }, [originalID, comparedID, API_URL, isLoaded, isSignedIn, user])
 
     //Returns when the table is loading on the display.
     if(loading) {
@@ -71,49 +76,57 @@ export function CompareTable() {
                         </thead>
                         <tbody>
                             <tr>
-                                <th>Brand</th>
+                                <th><strong>Brand</strong></th>
                                 <td>{originalProduct.brand}</td>
                                 <td>{compareProduct.brand}</td>
                             </tr>
 
                             <tr>
-                                <th>Prices</th>
+                                <th><strong>Prices</strong></th>
                                 <td>
                                     {originalPrice.map((price, i) => (
                                         <div key={i}>
-                                            <strong>{price.store}</strong> ${price.price}
+                                            <strong>{(price.store)
+                                                .replace(/\b\w/g, char => char.toUpperCase())       
+                                            }</strong> ${price.price}
                                         </div>
                                     ))}
                                 </td>
                                 <td>
                                     {comparePrice.map((price, i) => (
                                         <div key={i}>
-                                            <strong>{price.store}</strong> ${price.price}
+                                            <strong>{(price.store)
+                                                .replace(/\b\w/g, char => char.toUpperCase())       
+                                            }</strong> ${price.price}
                                         </div>
                                     ))}
                                 </td>
                             </tr>
 
                             <tr>
-                                <th>Ratings</th>
+                                <th><strong>Ratings</strong></th>
                                 <td>
                                     {originalPrice.map((price, i) => (
                                         <div key={i}>
-                                            <strong>{price.store}</strong> {price.rating}
+                                            <strong>{(price.store)
+                                                .replace(/\b\w/g, char => char.toUpperCase())       
+                                            }</strong> ${price.price}
                                         </div>
                                     ))}
                                 </td>
                                 <td>
                                     {comparePrice.map((price, i) => (
                                         <div key={i}>
-                                            <strong>{price.store}</strong> {price.rating}
+                                            <strong>{(price.store)
+                                                .replace(/\b\w/g, char => char.toUpperCase())       
+                                            }</strong> ${price.price}
                                         </div>
                                     ))}
                                 </td>
                             </tr>
 
                             <tr>
-                                <th>Features</th>
+                                <th><strong>Features</strong></th>
                                 <td>
                                     <ul>
                                         {originalProduct.features
@@ -136,12 +149,15 @@ export function CompareTable() {
                             </tr>
 
                             <tr>
-                                <th>Comments</th>
+                                <th><strong>Features</strong></th>
                                 <td>
                                     <ul>
                                         {originalComments.map((comment) => (
                                             <li key={comment.id}>
-                                                <strong>{comment.field || "General"}:</strong> {comment.text}
+                                                <strong>{(comment.field || "General")
+                                            .replaceAll("_", " ")
+                                            .replace(/\b\w/g, char => char.toUpperCase())}   
+                                        </strong> {comment.text}
                                             </li>
                                         ))}
                                     </ul>
@@ -150,7 +166,10 @@ export function CompareTable() {
                                     <ul>
                                         {compareComments.map((comment) => (
                                             <li key={comment.id}>
-                                                <strong>{comment.field || "General"}:</strong> {comment.text}
+                                                <strong>{(comment.field || "General")
+                                            .replaceAll("_", " ")
+                                            .replace(/\b\w/g, char => char.toUpperCase())}   
+                                        </strong> {comment.text}
                                             </li>
                                         ))}
                                     </ul>

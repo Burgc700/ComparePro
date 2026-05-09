@@ -13,12 +13,13 @@ export function Recommendations() {
     const[recommendations, setRecommendations] = useState([])
     //Parameter that helps gets the recommendation for the right user based on what they have viewed.
     const {user, isSignedIn} = useUser()
+    const API_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         //Checks to make sure the user is signed in before any recommendations get returned.
         if(isSignedIn && user) {
             //Fetches the recommendations for the user based of their user id.
-            fetch(`http://localhost:5000/api/recommendations/${user.id}`)
+            fetch(`${API_URL}/api/recommendations/${user.id}`)
                 .then(response => {
                     if(!response.ok) {
                         throw new Error(`HTTP error: ${response.status}`)

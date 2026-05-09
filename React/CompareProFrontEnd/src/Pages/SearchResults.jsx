@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import Likes from '../Components/Likes'
+import { Navbar } from "../Components/Navbar"
 import "./Home.css"
 
 //Function that returns the products based on the search criteria.
@@ -13,6 +14,7 @@ export function SearchResults() {
     const [searchParams] = useSearchParams()
     //Additional parameter that gets the search criteria.
     const query = searchParams.get('q')
+    const API_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         //Only searches when there is query or something in the search bar.
@@ -21,7 +23,7 @@ export function SearchResults() {
             return
         }
         //Get request that returns the items for the search criteria.
-        fetch(`http://localhost:5000/api/products/search?q=${query}`)
+        fetch(`${API_URL}/api/products/search?q=${query}`)
             .then(response => response.json())
             .then(data => {
                 setProducts(data)
@@ -51,6 +53,7 @@ export function SearchResults() {
     //Returns the full page based on the components added to render the page.
     return (
         <>
+            <Navbar></Navbar>
             <h1 className="mainHeaders">Results for {query}</h1>
                 <div className="AllProducts">
                     {products.map((product, index) => ( 

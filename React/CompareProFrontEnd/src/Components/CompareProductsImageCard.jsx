@@ -13,14 +13,15 @@ export function CompareProductsImageCard() {
     const [ compareProduct, setCompareProduct ] = useState(null)
     const [ loading, setLoading ] = useState(true)
     const [ error, setError ] = useState(null)
+    const API_URL = import.meta.env.VITE_API_URL
 
         useEffect(() => {
             setLoading(true)
             setError(null)
             //Makes sure it gets all the data for the products being compared.
             Promise.all([
-                fetch(`http://localhost:5000/api/products/ID/${originalID}`).then(res => res.json()),
-                fetch(`http://localhost:5000/api/products/ID/${comparedID}`).then(res => res.json())
+                fetch(`${API_URL}/api/products/ID/${originalID}`).then(res => res.json()),
+                fetch(`${API_URL}/api/products/ID/${comparedID}`).then(res => res.json())
             ])
             //Sets data that is needed to be displayed on the screen.
             .then(([originalProductData, compareProductData]) => {

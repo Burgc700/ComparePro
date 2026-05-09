@@ -18,6 +18,7 @@ export function CategoryProducts() {
     const [appliedPriceFilter, setAppliedPriceFilter] = useState(0)
     const [appliedRatingFilter, setAppliedRatingFilter] = useState(0)
     const page = category?.toUpperCase()
+    const API_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         //Resets the price and rating sorting parameters each time a new page is selected.
@@ -40,7 +41,7 @@ export function CategoryProducts() {
         setLoading(true)
         setError(null)
         //Fetches the products that fit the filter criteria.
-        fetch(`http://localhost:5000/api/products/category/${category}?minPrice=${appliedPriceFilter}&minRating=${appliedRatingFilter}`)
+        fetch(`${API_URL}/api/products/category/${category}?minPrice=${appliedPriceFilter}&minRating=${appliedRatingFilter}`)
             .then(response => {
                 if(!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`)
@@ -66,7 +67,7 @@ export function CategoryProducts() {
 
     //Returns this when the products are loading.
     if(loading) {
-        return <div>Loading all products...</div>
+        return <div>Loading all {category}'s</div>
     }
 
     //Returns if an error occurs with the error.

@@ -235,15 +235,9 @@ Get request to get the comments the user has already added for a product.
 class CommentsForProduct(Resource):
     def get(self, product_id):
         args = user_query_args.parse_args()
-        product = ProductsModel.query.get(product_id)
-        if not product:
-            return {"message": "Invalid product id"}, 400
-        user_id = args["user_id"]
-
-        comments = CommentsModel.query.filter_by(
-            product_id=product_id,
-            user_id=user_id
-        ).order_by(CommentsModel.field).all()
+        comments, error = CommentService.get_comments_for_products(product_id, args["user_id"])
+        if error:
+            return {"message": error}, 400
 
         return marshal(comments, commentFields), 200
 
@@ -254,15 +248,16 @@ class AddComment(Resource):
     #@marshal_with(commentFields)
     def post(self, product_id):
         args = comment_args.parse_args()
-        product = ProductsModel.query.get(product_id)
-        if not product:
-            return {"message": "Invalid product id"}, 401
-        if not args["text"] or args["text"].strip() == "":
-            return {"message": "Comment text cannot be empty"}, 400
-        comment = CommentsModel(product_id=product_id, user_id=args['user_id'], text=args['text'], field=args['field'])
-        db.session.add(comment)
-        db.session.commit()
-        db.session.refresh(comment)
+        comment, error = CommentService.add_comment(
+            product_id,
+            args["user_id"],
+            args["text"],
+            args["field"]
+        )
+        if error == "Invalid product id":
+            return {"message": error}, 400
+        if error == "Comment text can not be empty":
+            return {"message": error}, 400
         return marshal(comment, commentFields), 201
 
 '''

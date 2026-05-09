@@ -21,9 +21,9 @@ export function IndividualProductInfo({product}) {
                 <img src={product.image} style={{ maxWidth: '100%' }}></img>
             </div>
             <div className="ProductInfo">
-                <h5>Brand: {product.brand}</h5>
-                <h5>Category: {product.category}</h5>
-                <h5>Model Number: {product.model_num}</h5>
+                <h5 className="generalInfo">Brand: {product.brand}</h5>
+                <h5 className="generalInfo">Category: {product.category}</h5>
+                <h5 className="generalInfo">Model Number: {product.model_num}</h5>
                 <div className='featuresContainer'>
                     <ul className="featuresList">
                         {product.features

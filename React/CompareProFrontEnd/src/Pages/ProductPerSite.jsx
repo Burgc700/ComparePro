@@ -6,6 +6,7 @@ import { PriceComparison } from "../Components/PriceComparison"
 import { IndividualProductInfo } from "../Components/IndividualProductInfo"
 import { CommentsAndFields } from "../Components/CommentsAndFields"
 import { CompareProducts } from "../Components/CompareProducts"
+import { Navbar } from "../Components/Navbar"
 import "./ProductPerSite.css"
 import "../Components/Navbar.css"
 
@@ -19,11 +20,12 @@ export function ProductPerSite() {
     const [refreshCompareList, setRefreshCompareList] = useState(0)
     const [product, setProduct] = useState(null)
     const [loading, setLoading] = useState(true)
+    const API_URL = import.meta.env.VITE_API_URL
 
     //Effect that sends a post request to the database when a user views a product.
     useEffect(() => {
         if(user && isSignedIn) {
-            fetch(`http://localhost:5000/api/track-view/${id}`, {
+            fetch(`${API_URL}/api/track-view/${id}`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({user_id: user.id})
@@ -33,7 +35,7 @@ export function ProductPerSite() {
 
     //Get request that gets the product info for the category tab that has been selected.
     useEffect(() => {
-        fetch(`http://localhost:5000/api/products/ID/${id}`)
+        fetch(`${API_URL}/api/products/ID/${id}`)
             .then(res => res.json())
             .then(data => {
                 setProduct(data)
@@ -54,6 +56,8 @@ export function ProductPerSite() {
     //Returns the full page based on the components added to render the page.
     return (
         <>
+            <Navbar></Navbar>
+
             <IndividualProductInfo product={product}/>
 
             <CompareProducts refreshList={refreshCompareList}/>

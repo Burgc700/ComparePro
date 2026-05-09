@@ -12,8 +12,8 @@ export function SlideShow() {
 
     //Variable that sets the captions for each image.
     const captions = [
-        "In a product page you can select minimum price and minimum rating",
-        "Add comments to products. Each product of the same category that has a comment can be selected to compare",
+        "In a product page you can select minimum price and minimum rating.",
+        "Add comments to products. Each product of the same category that has a comment can be selected to compare.",
         "Looks at the details of the products that are wanting to be compared."
     ]
 
@@ -24,7 +24,7 @@ export function SlideShow() {
     useEffect(() => {
         const timer = setInterval (() => {
             setCurrImage(prev => (prev + 1) % screenshots.length)
-        }, 3000)
+        }, 6000)
         return () => clearInterval(timer)
     }, [screenshots.length])
 

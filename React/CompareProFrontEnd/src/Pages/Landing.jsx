@@ -28,7 +28,7 @@ export function Landing() {
             <div className="content">
                 <img className="Landingpic" src={Logo} alt="Logo"></img>
                 <h1>ComparePro</h1>
-                <h4>Redirecting you an awesome page</h4>
+                <h4>Redirecting you to an awesome page</h4>
             </div>
         </>
     )

@@ -10,10 +10,11 @@ export function AllProducts() {
     const [Products, setProducts] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const API_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         //Fetches all the product information from the database.
-        fetch('http://localhost:5000/api/products')
+        fetch(`${API_URL}/api/products`)
             .then(response => {
                 if(!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`)

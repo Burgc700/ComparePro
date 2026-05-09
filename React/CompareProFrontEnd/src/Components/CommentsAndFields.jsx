@@ -18,6 +18,7 @@ export function CommentsAndFields({onCommentAdd}) {
     const [ commentList, setCommentList ] = useState([])
     const [ selectField, setSelectField] = useState("pro")
     const [ customField, setCustomField ] = useState("")
+    const API_URL = import.meta.env.VITE_API_URL
 
     useEffect(() => {
         if (!isLoaded || !isSignedIn || !user) {
@@ -26,7 +27,7 @@ export function CommentsAndFields({onCommentAdd}) {
             return
         }
         //Get request to get the comments for a certain product if that product has comments with it.
-        fetch(`http://localhost:5000/api/comments/${id}?user_id=${user.id}`)
+        fetch(`${API_URL}/api/comments/${id}?user_id=${user.id}`)
             .then(response => response.json())
             .then(data => { 
                 setCommentList(data)
@@ -64,7 +65,7 @@ export function CommentsAndFields({onCommentAdd}) {
         const finalField = selectField === "custom" ? customField : selectField
         if(inputText.trim() !== '') {
             //Post request that sends the comment and field to the database for that user so it gets displayed the next the user views that product.
-            fetch(`http://localhost:5000/api/comments/add/${id}`, {
+            fetch(`${API_URL}/api/comments/add/${id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,17 +118,15 @@ export function CommentsAndFields({onCommentAdd}) {
             
                 <div className="commentsContainer">
                     <ul className="list">
-                        {/* {commentList.map((comment) => (
-                            <li key={comment.id}>
-                                <p><strong>{comment.field}</strong> {comment.text}</p>
-                            </li>
-                        ))} */}
                         {[...commentList]
                             .sort((a, b) => (a.field || "General").localeCompare(b.field || "General"))
                             .map((comment) => (
                                 <li key={comment.id}>
                                     <p>
-                                        <strong>{comment.field || "General"}</strong> {comment.text}
+                                        <strong>{(comment.field || "General")
+                                            .replaceAll("_", " ")
+                                            .replace(/\b\w/g, char => char.toUpperCase())}   
+                                        </strong> {comment.text}
                                     </p>
                                 </li>
                             ))}
