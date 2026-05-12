@@ -149,7 +149,7 @@ export function CompareTable() {
                             </tr>
 
                             <tr>
-                                <th><strong>Features</strong></th>
+                                <th><strong>Comments</strong></th>
                                 <td>
                                     <ul>
                                         {originalComments.map((comment) => (
