@@ -110,7 +110,7 @@ export function CompareTable() {
                                         <div key={i}>
                                             <strong>{(price.store)
                                                 .replace(/\b\w/g, char => char.toUpperCase())       
-                                            }</strong> ${price.price}
+                                            }</strong> {price.rating}
                                         </div>
                                     ))}
                                 </td>
@@ -119,7 +119,7 @@ export function CompareTable() {
                                         <div key={i}>
                                             <strong>{(price.store)
                                                 .replace(/\b\w/g, char => char.toUpperCase())       
-                                            }</strong> ${price.price}
+                                            }</strong> {price.rating}
                                         </div>
                                     ))}
                                 </td>

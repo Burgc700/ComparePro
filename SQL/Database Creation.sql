@@ -648,3 +648,5 @@ INNER JOIN Products.Products
     ON Price.Product_id = Products.Product_id
 WHERE Products.Product_Category = 'GPU'
 ORDER BY Price.Price ASC
+
+SELECT * FROM Products.Products WHERE Brand = 'Intel'

@@ -4,17 +4,19 @@ import "../Pages/SignInSignUp.css"
 import slide1 from "../assets/CPUPage.png"
 import slide3 from "../assets/Comparison.png"
 import slide2 from "../assets/CommentandCompare.png"
+import slide4 from "../assets/PriceComp.png"
 
 //Function that creates a little slide show of images and tells the user what the can do on the component.
 export function SlideShow() {
     //Variable that gets the images.
-    const screenshots = [slide1, slide2, slide3]
+    const screenshots = [slide1, slide2, slide3, slide4]
 
     //Variable that sets the captions for each image.
     const captions = [
         "In a product page you can select minimum price and minimum rating.",
         "Add comments to products. Each product of the same category that has a comment can be selected to compare.",
-        "Looks at the details of the products that are wanting to be compared."
+        "Looks at the details of the products that are wanting to be compared.",
+        "Compare the prices between the websites to find the best deal."
     ]
 
     //Hook that sets the image that is displayed on the page.
