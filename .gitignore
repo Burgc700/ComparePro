@@ -7,3 +7,4 @@ ProductInfo_progress2.0.csv
 ProductInfo2.0.csv
 __pycache__/
 *.pyc
+.env
