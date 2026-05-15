@@ -70,10 +70,14 @@ class CommentService:
         return returned_products
     
     @staticmethod
+    #Method to get product comments for a user.
     def get_comments_for_products(product_id, user_id):
+        #Finds the product the user has clicked on.
         product = ProductsModel.query.get(product_id)
+        #If its not a valid id error is returned.
         if not product:
             return None, "Invalid product id"
+        #Finds the comments from that user for that product and orders them by the comment field.
         comments = CommentsModel.query.filter_by(
             product_id = product_id,
             user_id = user_id
@@ -81,16 +85,21 @@ class CommentService:
         return comments, None
     
     @staticmethod
+    #Method to add a comment to a product.
     def add_comment(product_id, user_id, text, field):
+        #The product the user has selected.
         product = ProductsModel.query.get(product_id)
+        #The fields for the comment including the text and field the user enters.
         comment = CommentsModel(
             product_id = product_id,
             user_id = user_id,
             text = text,
             field = field
         )
+        #If the product id not a valid id error is returned.
         if not product:
             return None, "Invalid product id"
+        #If the comment box has no text prompts the user to enter a comment.
         if text is None or text.strip() == "":
             return None, "Comment text can not be empty"
         
