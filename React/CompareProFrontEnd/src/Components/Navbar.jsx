@@ -3,7 +3,7 @@ import { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { UserButton } from '@clerk/clerk-react'
 import "./Navbar.css"
-import Logo from '../assets/Logo2.0.jpg'
+import Logo from '../assets/Logo2.0.png'
 
 //Function used to define the buttons and other navbar parts.
 export function Navbar() {
